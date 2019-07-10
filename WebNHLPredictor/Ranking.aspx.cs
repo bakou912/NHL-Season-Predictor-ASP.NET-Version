@@ -40,8 +40,13 @@ namespace WebNHLPredictor
             }
 
             //Binding grid to the data table
-            rankingrGrid.DataSource = dt;
-            rankingrGrid.DataBind();
+            rankingGrid.DataSource = dt;
+            rankingGrid.DataBind();
+        }
+
+        protected void SortColumn_Event(object sender, System.Web.UI.WebControls.GridViewSortEventArgs e)
+        {
+            //TODO code sorting by column method
         }
     }
 }

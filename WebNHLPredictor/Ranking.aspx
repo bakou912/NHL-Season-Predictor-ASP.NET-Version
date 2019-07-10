@@ -4,5 +4,5 @@
     <h2><%: Title %></h2>
     <h3>Ranking Page to be built containing all previously estimated players</h3>
 
-    <asp:Gridview ID ="rankingrGrid" runat="server" />
+    <asp:GridView ID="rankingGrid" runat="server" AllowSorting="True" OnSorting="SortColumn_Event"/>
 </asp:Content>
