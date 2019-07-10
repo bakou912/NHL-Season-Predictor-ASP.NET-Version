@@ -15,10 +15,8 @@ body {
 input,
 select,
 textarea {
-    max-width: 280px;
+    max-width: 310px;
 }
-
-
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 768px) {
     .jumbotron {

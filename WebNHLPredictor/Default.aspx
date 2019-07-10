@@ -30,7 +30,7 @@
                         </div>
                     </div>
                     <h3>Result</h3>
-                    <asp:TextBox TextMode="multiline" rows="5" Columns="50" id ="result" runat="server" ReadOnly="true" />
+                    <asp:TextBox TextMode="multiline" rows="5" Columns="80" id ="result" runat="server" ReadOnly="true" />
                 </div>
             </ContentTemplate>
     </asp:UpdatePanel>

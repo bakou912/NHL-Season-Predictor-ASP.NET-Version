@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -31,15 +32,20 @@ namespace WebNHLPredictor
         {
             if(!IsPostBack)//Prevents from resetting the components at every postback
             {
-                Loader = new ApiLoader();
-                TeamsCollection = new TeamCollection();
-                PlayersMemory = new List<Player>();
+                Loader = Session["Loader"] == null ? new ApiLoader() : Session["Loader"] as ApiLoader;
+                TeamsCollection = Session["TeamCollection"] == null ? new TeamCollection() : Session["TeamCollection"] as TeamCollection;
+                PlayersMemory = Session["PlayersMemory"] == null ? new List<Player>() : Session["PlayersMemory"] as List<Player>;
 
+                int teamIndex = (int?) Session["SelectedTeamIndex"] ?? 0;
+                int playerIndex = (int?) Session["SelectedPlayerIndex"] ?? 0;
+
+                teamsSelect.SelectedIndex = teamIndex;
                 teamsSelect.DataSource = TeamsCollection;
                 teamsSelect.DataBind();
 
-                PersonCollection = TeamsCollection[0].PersonList;
+                PersonCollection = TeamsCollection[teamIndex].PersonList;
 
+                playersSelect.SelectedIndex = playerIndex;
                 playersSelect.DataSource = PersonCollection;
                 playersSelect.DataBind();
             }
@@ -54,6 +60,7 @@ namespace WebNHLPredictor
         {
             if (!playersSelect.SelectedItem.Equals(null))
             {
+                Session["SelectedPlayerIndex"] = playersSelect.SelectedIndex;
                 computeButton.Enabled = false;
                 var tempPlayer = PersonCollection[playersSelect.SelectedIndex] as Roster2;
                 //Check if the player hasn't already been loaded (avoiding to call the api again)
@@ -66,7 +73,8 @@ namespace WebNHLPredictor
 
                     //Adding player to the already calculated players
                     PlayersMemory.Add(Player.duplicate(player));
-
+                    Session["PlayersMemory"] = PlayersMemory;
+ 
                     //Printing the player's expected season to the result textbox
                     result.Text = player.ToString();
                 }
@@ -84,6 +92,8 @@ namespace WebNHLPredictor
         /// <param name="e"></param>
         protected void TeamsSelect_OnServerChange(object sender, EventArgs e)
         {
+            Session["SelectedPlayerIndex"] = 0;
+            Session["SelectedTeamIndex"] = teamsSelect.SelectedIndex;
             PersonCollection = TeamsCollection[teamsSelect.SelectedIndex].PersonList;
             playersSelect.DataSource = PersonCollection;
             playersSelect.DataBind();
@@ -98,6 +108,12 @@ namespace WebNHLPredictor
         /// <param name="e"></param>
         protected void EnableComputeButton(object sender, EventArgs e)
         {
+            if(sender == playersSelect)
+            {
+                Session["SelectedTeamIndex"] = teamsSelect.SelectedIndex;
+                Session["SelectedPlayerIndex"] = playersSelect.SelectedIndex;
+            }
+
             if (!computeButton.Enabled)
             {
                 computeButton.Enabled = true;

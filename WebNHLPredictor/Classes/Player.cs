@@ -10,6 +10,8 @@ namespace SeasonPredict
         public List<Season> SeasonList { get;}
         public Season ExpectedSeason { get;}
 
+        public bool HasSufficientInfo { get; private set; }
+
         public void add(Season s) => SeasonList.Add(s);
         public void remove(Season s) => SeasonList.Remove(s);
 
@@ -18,6 +20,7 @@ namespace SeasonPredict
             SeasonList = new List<Season>();
             ExpectedSeason = new Season();
             FullName = "";
+            HasSufficientInfo = false;
 
             foreach (var s in seasonsToDuplicate)
             {
@@ -80,7 +83,9 @@ namespace SeasonPredict
             {
                 ExpectedSeason.GamesPlayed = 82;
             }
-                
+
+
+            HasSufficientInfo = SeasonList.Count > 2 && ExpectedSeason.GamesPlayed >= 50;
 
             ExpectedSeason.calculatePoints();
         }
@@ -118,7 +123,7 @@ namespace SeasonPredict
 
         public override string ToString()
         {
-            if (SeasonList.Count > 2)
+            if (HasSufficientInfo)
             {
                 return FullName
                        + "\nAssists: " + ExpectedSeason.Assists
@@ -127,7 +132,7 @@ namespace SeasonPredict
                        + "\nGames played: " + ExpectedSeason.GamesPlayed;
 
             }
-            return "Insufficient number of seasons.";
+            return "Insufficient number of seasons or games played.";
         }
     }
     #endregion
