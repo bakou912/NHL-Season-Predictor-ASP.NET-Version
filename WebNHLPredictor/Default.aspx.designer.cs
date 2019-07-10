@@ -10,7 +10,16 @@
 namespace WebNHLPredictor {
     
     
-    public partial class _Default {
+    public partial class Default {
+        
+        /// <summary>
+        /// UpdatePanel1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel UpdatePanel1;
         
         /// <summary>
         /// teamsSelect control.
@@ -31,12 +40,21 @@ namespace WebNHLPredictor {
         protected global::System.Web.UI.WebControls.DropDownList playersSelect;
         
         /// <summary>
-        /// compute control.
+        /// computeButton control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlButton compute;
+        protected global::System.Web.UI.WebControls.Button computeButton;
+        
+        /// <summary>
+        /// result control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox result;
     }
 }

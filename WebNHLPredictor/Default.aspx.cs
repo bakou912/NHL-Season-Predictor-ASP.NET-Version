@@ -9,101 +9,98 @@ using SeasonPredict;
 
 namespace WebNHLPredictor
 {
-    public partial class _Default : Page
+    public partial class Default : Page
     {
-        public TeamCollection TeamsCollection;
+        public static TeamCollection TeamsCollection;
 
-        public ObservableCollection<Roster2> PersonCollection;
+        public static ObservableCollection<Roster2> PersonCollection;
 
-        public List<Player> PlayersMemory;
+        public static List<Player> PlayersMemory;
 
         public static ApiLoader Loader;
 
-        protected void Page_Load(object sender, EventArgs e)
-        {
-            Loader = new ApiLoader();
-            TeamsCollection = new TeamCollection();
-            PlayersMemory = new List<Player>();
-
-            teamsSelect.DataSource = TeamsCollection;
-            teamsSelect.DataBind();
-
-            PersonCollection =TeamsCollection[0].PersonList;
-
-            playersSelect.DataSource = PersonCollection;
-            playersSelect.DataBind();
-
-            compute.Disabled = true;
-        }
-/*
         /// <summary>
+        /// Loads the page and initializes the following components:
+        /// The API loader used to fetch info from the NHL's API
+        /// The team collection (all the teams loaded from the NHL's API)
+        /// The player memory, used to store already calculated players (prevents extra calls to the API)
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void SendRequest_Click(object sender, EventArgs e)
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if(!IsPostBack)//Prevents from resetting the components at every postback
+            {
+                Loader = new ApiLoader();
+                TeamsCollection = new TeamCollection();
+                PlayersMemory = new List<Player>();
+
+                teamsSelect.DataSource = TeamsCollection;
+                teamsSelect.DataBind();
+
+                PersonCollection = TeamsCollection[0].PersonList;
+
+                playersSelect.DataSource = PersonCollection;
+                playersSelect.DataBind();
+            }
+        }
+
+        /// <summary>
+        /// Calls the needed methods to calculate and print the player's expected season
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void ComputePlayer(object sender, EventArgs e)
         {
             if (!playersSelect.SelectedItem.Equals(null))
             {
+                computeButton.Enabled = false;
+                var tempPlayer = PersonCollection[playersSelect.SelectedIndex] as Roster2;
                 //Check if the player hasn't already been loaded (avoiding to call the api again)
-                if (!PlayersMemory.Any(p => p.Id.Equals((playersSelect.SelectedItem as Roster2).Id)))
+                if (!PlayersMemory.Any(p => p.Id.Equals(PersonCollection[playersSelect.SelectedIndex].Id)))
                 {
-                    //When api is called, all GUI components are disabled to prevent user selection change problems
-                    setComponentsAvailability(false);
+                    //result.Text = "Calculating...";
 
-                    expectedSeasonBox.Text = "Calculating...";
+                    //Fetching the player through the player loader
+                    var player = new Player(Loader.loadPlayer(tempPlayer.Id), tempPlayer.Name, tempPlayer.Id);
 
-                    var player = new Player(loader.loadPlayer((playersSelect.SelectedItem as Roster2).Id), (playersSelect.SelectedItem as Roster2).Name, (playersSelect.SelectedItem as Roster2).Id);
-
+                    //Adding player to the already calculated players
                     PlayersMemory.Add(Player.duplicate(player));
 
-                    expectedSeasonBox.Text = player.ToString();
-
-                    //GUI components are enabled for the user
-                    setComponentsAvailability(true);
+                    //Printing the player's expected season to the result textbox
+                    result.Text = player.ToString();
                 }
                 else
                 {
-                    expectedSeasonBox.Text = PlayersMemory.First(p => p.Id.Equals((playersSelect.SelectedItem as Roster2).Id)).ToString();
+                    result.Text = PlayersMemory.First(p => p.Id.Equals(tempPlayer.Id)).ToString();
                 }
             }
         }
 
         /// <summary>
-        ///     Makes GUI elements enabled or not according to availability parameter
-        /// </summary>
-        /// <param name="availability">Boolean value assigned to the IsEnabled property of graphical interface elements</param>
-        private void setComponentsAvailability(bool availability)
-        {
-            teamsSelect.Disabled = availability;
-            playersSelect.Disabled = availability;
-            compute.Disabled = availability;
-        }
-        */
-        /// <summary>
         ///     teamsListbox SelectionChanged event handling method
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected void teamsSelect_OnServerChange(object sender, EventArgs e)
+        protected void TeamsSelect_OnServerChange(object sender, EventArgs e)
         {
             PersonCollection = TeamsCollection[teamsSelect.SelectedIndex].PersonList;
-
             playersSelect.DataSource = PersonCollection;
             playersSelect.DataBind();
-            compute.Disabled = true; //Since playersListbox isn't focused, the calculation button is disabled
+            EnableComputeButton(sender, e);
         }
-        
+
         /// <summary>
         ///     playersListbox SelectionChanged event handling method
         ///     When selection is changed and the button is disabled, it gets enabled
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void PlayersListbox_OnSelectionChanged(object sender, EventArgs e)
+        protected void EnableComputeButton(object sender, EventArgs e)
         {
-            if (compute.Disabled)
+            if (!computeButton.Enabled)
             {
-                compute.Disabled = false;
+                computeButton.Enabled = true;
             }
         }
     }
