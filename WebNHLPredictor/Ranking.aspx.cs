@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SeasonPredict;
+using System;
 using System.Data;
 using System.Linq;
 using System.Web.UI;
@@ -11,13 +12,13 @@ namespace WebNHLPredictor
         protected DataTable dt;
         protected void Page_Load(object sender, EventArgs e)
         {
-            if(Default.PlayersMemory != null)
+            //Initializing data table
+            dt = new DataTable();
+
+            if (Default.PlayersMemory != null)
             {
                 if (Session["DataTable"] == null)
                 {
-                    //Initializing data table
-                    dt = new DataTable();
-
                     //Initiating data table's column model
                     dt.Columns.Add("Name", typeof(string));
                     dt.Columns.Add("A", typeof(int));
@@ -96,6 +97,29 @@ namespace WebNHLPredictor
             //Binding grid to the data table
             rankingGrid.DataSource = dt;
             rankingGrid.DataBind();
+        }
+
+        //TODO: check for errors
+        protected void ComputeAll_Click(object sender, EventArgs e)
+        {
+            if(Default.TeamsCollection != null)
+            {
+                foreach(Team team in Default.TeamsCollection)
+                {
+                    foreach(Roster2 person in team.PersonList)
+                    {
+                        var player = Default.Loader.loadPlayer(person.Id);
+
+                        if (player.HasSufficientInfo)
+                        {
+                            dt.Rows.Add(player.FullName, player.ExpectedSeason.Assists, player.ExpectedSeason.Goals, player.ExpectedSeason.Points, player.ExpectedSeason.GamesPlayed);
+                        }
+                    }
+                }
+
+                rankingGrid.DataSource = dt;
+                rankingGrid.DataBind();
+            }
         }
     }
 }

@@ -8,16 +8,17 @@
         <ContentTemplate>
                 <div id="content">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <h3>Choose Team</h3>
                                 <asp:DropDownList id="teamsSelect" runat="server" AutoPostBack="True" OnSelectedIndexChanged="TeamsSelect_OnServerChange" />
                         </div>
-                        <div class="col-md-4">
-                            <img class="img" id="teamImg">
+                        <div class="col-md-2">
+                            <br/>
+                            <asp:Image ID="teamImg" runat="server" Height="75px" Width="75px" />  
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <h3>Choose Player</h3>
                             <asp:DropDownList id="playersSelect" runat="server" AutoPostBack="True" OnSelectedIndexChanged="EnableComputeButton" />
                             <br/><br/>
@@ -25,8 +26,9 @@
                                 <asp:button Text="Compute" id="computeButton" runat="server" AutoPostBack="True" onclick="ComputePlayer"></asp:button>
                             </div> 
                         </div>
-                        <div class="col-md-4">
-                            <img id="playerImg">
+                        <div class="col-md-2">
+                            <br/>
+                            <asp:Image ID="playerImg" runat="server" Height="75px" Width="75px"/>
                         </div>
                     </div>
                     <h3>Result</h3>

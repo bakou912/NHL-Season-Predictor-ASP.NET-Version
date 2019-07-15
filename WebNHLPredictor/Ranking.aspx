@@ -6,4 +6,6 @@
     <h2><%: Title %></h2>
 
     <asp:GridView ID="rankingGrid" CssClass="rankingGrid" runat="server" AllowSorting="True" OnSorting="SortColumn_Event" CellPadding="5"/>
+    <br/>
+    <asp:Button ID="computeAll" runat="server" OnClick="ComputeAll_Click" Text="Compute All Players" />
 </asp:Content>

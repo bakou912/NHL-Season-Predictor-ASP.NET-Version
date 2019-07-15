@@ -24,7 +24,7 @@ namespace SeasonPredict
     }
     public class Team
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public bool Active { get; set; }
         public string Abbreviation { get; set; }
         public string Name { get; set; }

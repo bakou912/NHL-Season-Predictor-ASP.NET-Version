@@ -14,11 +14,14 @@ namespace WebNHLPredictor
     {
         public static TeamCollection TeamsCollection;
 
-        public static ObservableCollection<Roster2> PersonCollection;
+        public static ObservableCollection<Roster2> PersonsCollection;
 
         public static List<Player> PlayersMemory;
 
         public static ApiLoader Loader;
+
+        private static string[] PLAYER_URL = { "https://nhl.bamcontent.com/images/headshots/current/168x168/", ".jpg" };
+        private static string[] TEAM_URL = { "https://www-league.nhlstatic.com/builds/site-core/01c1bfe15805d69e3ac31daa090865845c189b1d_1458063644/images/team/logo/current/", "_dark.svg" };
 
         /// <summary>
         /// Loads the page and initializes the following components:
@@ -43,11 +46,14 @@ namespace WebNHLPredictor
                 teamsSelect.DataSource = TeamsCollection;
                 teamsSelect.DataBind();
 
-                PersonCollection = TeamsCollection[teamIndex].PersonList;
+                PersonsCollection = TeamsCollection[teamIndex].PersonList;
 
                 playersSelect.SelectedIndex = playerIndex;
-                playersSelect.DataSource = PersonCollection;
+                playersSelect.DataSource = PersonsCollection;
                 playersSelect.DataBind();
+
+                ChangeImage(teamImg, TEAM_URL, TeamsCollection[teamIndex].Id);
+                ChangeImage(playerImg, PLAYER_URL, PersonsCollection[playerIndex].Id);
             }
         }
 
@@ -58,13 +64,14 @@ namespace WebNHLPredictor
         /// <param name="e"></param>
         public void ComputePlayer(object sender, EventArgs e)
         {
-            if (!playersSelect.SelectedItem.Equals(null))
+            if (playersSelect.SelectedItem != null)
             {
                 Session["SelectedPlayerIndex"] = playersSelect.SelectedIndex;
                 computeButton.Enabled = false;
-                var tempPlayer = PersonCollection[playersSelect.SelectedIndex] as Roster2;
+                var tempPlayer = PersonsCollection[playersSelect.SelectedIndex] as Roster2;
+
                 //Check if the player hasn't already been loaded (avoiding to call the api again)
-                if (!PlayersMemory.Any(p => p.Id.Equals(PersonCollection[playersSelect.SelectedIndex].Id)))
+                if (!PlayersMemory.Any(p => p.Id.Equals(PersonsCollection[playersSelect.SelectedIndex].Id)))
                 {
                     //result.Text = "Calculating...";
 
@@ -94,9 +101,11 @@ namespace WebNHLPredictor
         {
             Session["SelectedPlayerIndex"] = 0;
             Session["SelectedTeamIndex"] = teamsSelect.SelectedIndex;
-            PersonCollection = TeamsCollection[teamsSelect.SelectedIndex].PersonList;
-            playersSelect.DataSource = PersonCollection;
+            PersonsCollection = TeamsCollection[teamsSelect.SelectedIndex].PersonList;
+            playersSelect.DataSource = PersonsCollection;
             playersSelect.DataBind();
+
+            ChangeImage(teamImg, TEAM_URL, TeamsCollection[teamsSelect.SelectedIndex].Id);
             EnableComputeButton(sender, e);
         }
 
@@ -108,7 +117,7 @@ namespace WebNHLPredictor
         /// <param name="e"></param>
         protected void EnableComputeButton(object sender, EventArgs e)
         {
-            if(sender == playersSelect)
+            if (sender == playersSelect)
             {
                 Session["SelectedTeamIndex"] = teamsSelect.SelectedIndex;
                 Session["SelectedPlayerIndex"] = playersSelect.SelectedIndex;
@@ -117,6 +126,16 @@ namespace WebNHLPredictor
             if (!computeButton.Enabled)
             {
                 computeButton.Enabled = true;
+            }
+
+            ChangeImage(playerImg, PLAYER_URL, PersonsCollection[playersSelect.SelectedIndex].Id);
+        }
+
+        private void ChangeImage(Image img, string[] url, string id)
+        {
+            if (!String.IsNullOrEmpty(id))
+            {
+                img.ImageUrl = url[0] + id + url[1];
             }
         }
     }

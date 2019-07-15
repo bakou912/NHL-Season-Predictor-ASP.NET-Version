@@ -31,6 +31,15 @@ namespace WebNHLPredictor {
         protected global::System.Web.UI.WebControls.DropDownList teamsSelect;
         
         /// <summary>
+        /// teamImg control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Image teamImg;
+        
+        /// <summary>
         /// playersSelect control.
         /// </summary>
         /// <remarks>
@@ -47,6 +56,15 @@ namespace WebNHLPredictor {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button computeButton;
+        
+        /// <summary>
+        /// playerImg control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Image playerImg;
         
         /// <summary>
         /// result control.
