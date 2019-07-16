@@ -75,7 +75,7 @@ namespace SeasonPredict
 
         private void teamsInit()
         {
-            var temp = new ApiLoader().loadTeams().OrderBy(t => t.Name);
+            var temp = ApiLoader.loadTeams().OrderBy(t => t.Name);
             foreach (var t in temp)
             {
                 Add(t);

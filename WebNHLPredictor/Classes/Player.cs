@@ -50,7 +50,7 @@ namespace SeasonPredict
         {
             var total = 0.0;
             var weightsList = new List<double>();
-            int i = 0, averageGames = (int)SeasonList.Average(s => s.GamesPlayed);
+            int i = 0, averageGames = SeasonList.Count == 0 ? 0 : (int)SeasonList.Average(s => s.GamesPlayed);
 
             for (i = 0; i < SeasonList.Count; i++)
             {

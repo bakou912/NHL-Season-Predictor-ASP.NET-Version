@@ -9,23 +9,23 @@ namespace SeasonPredict
     using System.Linq;
 
 
-    public class ApiLoader
+    public static class ApiLoader
     {
         /// <summary>The URL</summary>
-        private const string baseUrl = "https://statsapi.web.nhl.com/api/v1";
+        private static string baseUrl = "https://statsapi.web.nhl.com/api/v1";
 
         /// <summary>The rest client</summary>
-        private readonly RestClient restClient;
+        private static readonly RestClient restClient = new RestClient(baseUrl);
 
         /// <summary>Initializes a new instance of the <see cref="ApiLoader"/> class.</summary>
-        public ApiLoader()
-        {
-            this.restClient = new RestClient(baseUrl);
-        }
+        //public ApiLoader()
+        //{
+            //this.restClient = new RestClient(baseUrl);
+        //}
 
         /// <summary>Fetching and deserializing all active teams</summary>
         /// <returns>The complete list of active teams (with their roster)</returns>
-        public ObservableCollection<Team> loadTeams()
+        public static ObservableCollection<Team> loadTeams()
         {
             var teamCollection = new ObservableCollection<Team>();
 
@@ -35,7 +35,7 @@ namespace SeasonPredict
                 Resource = "teams/?expand=team.roster"
              };
 
-            var response = this.restClient.Execute(request);
+            var response = restClient.Execute(request);
 
             var validTeamList = JsonConvert.DeserializeObject<TeamList>(response.Content)?.Teams;
 
@@ -69,7 +69,7 @@ namespace SeasonPredict
         /// </summary>
         /// <param name="id">Player ID in the NHL's database</param>
         /// <returns>The player </returns>
-        public Player loadPlayer(string id)
+        public static Player loadPlayer(string id)
         {
             var recentYear = DateTime.Now.Year;
 
@@ -89,7 +89,7 @@ namespace SeasonPredict
                 var year = $"{recentYear-1}{recentYear}";
                 recentYear--;
                 restRequest.Resource = baseResource+year;
-                var response = this.restClient.Execute(restRequest);
+                var response = restClient.Execute(restRequest);
 
                 try
                 {

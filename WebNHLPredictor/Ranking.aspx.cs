@@ -9,28 +9,30 @@ namespace WebNHLPredictor
 {
     public partial class Contact : Page
     {
+        private enum Source
+        {
+            Internal, External
+        }
         protected DataTable dt;
         protected void Page_Load(object sender, EventArgs e)
         {
-            //Initializing data table
-            dt = new DataTable();
+            if (Session["DataTable"] == null)
+            {
+                dt = new DataTable();
+                //Initiating data table's column model
+                dt.Columns.Add("Name", typeof(string));
+                dt.Columns.Add("A", typeof(int));
+                dt.Columns.Add("G", typeof(int));
+                dt.Columns.Add("P", typeof(int));
+                dt.Columns.Add("GP", typeof(int));
+            }
+            else
+            {
+                dt = Session["DataTable"] as DataTable;
+            }
 
             if (Default.PlayersMemory != null)
             {
-                if (Session["DataTable"] == null)
-                {
-                    //Initiating data table's column model
-                    dt.Columns.Add("Name", typeof(string));
-                    dt.Columns.Add("A", typeof(int));
-                    dt.Columns.Add("G", typeof(int));
-                    dt.Columns.Add("P", typeof(int));
-                    dt.Columns.Add("GP", typeof(int));
-                }
-                else
-                {
-                    dt = Session["DataTable"] as DataTable;
-                }
-
                 //Calling the populating method
                 PopulateGrid();
 
@@ -46,6 +48,7 @@ namespace WebNHLPredictor
         private void PopulateGrid()
         {
             dt.Rows.Clear();
+
             //Adds players to the data table
             foreach (var player in Default.PlayersMemory)
             {
@@ -99,27 +102,45 @@ namespace WebNHLPredictor
             rankingGrid.DataBind();
         }
 
-        //TODO: check for errors
+        /// <summary>
+        /// Computes all players in the NHL and populates the ranking grid
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void ComputeAll_Click(object sender, EventArgs e)
         {
-            if(Default.TeamsCollection != null)
+            dt.Rows.Clear();
+
+            if (Default.TeamsCollection != null)
             {
-                foreach(Team team in Default.TeamsCollection)
+                foreach (Team team in Default.TeamsCollection)
                 {
                     foreach(Roster2 person in team.PersonList)
                     {
-                        var player = Default.Loader.loadPlayer(person.Id);
+                        var player = ApiLoader.loadPlayer(person.Id);
+                        player.FullName = person.Name;
 
                         if (player.HasSufficientInfo)
                         {
                             dt.Rows.Add(player.FullName, player.ExpectedSeason.Assists, player.ExpectedSeason.Goals, player.ExpectedSeason.Points, player.ExpectedSeason.GamesPlayed);
+                            Default.AddToPlayersMemory(player);
                         }
                     }
                 }
 
                 rankingGrid.DataSource = dt;
                 rankingGrid.DataBind();
+
+                Session["DataTable"] = dt;
+            }
+            else
+            {
+                //Initializing Default.TeamsCollection
+                Default.LoadTeamsCollection();
+                //Callback to the method with a now initialized TeamsCollection
+                ComputeAll_Click(sender, e);
             }
         }
+
     }
 }

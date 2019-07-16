@@ -12,13 +12,11 @@ namespace WebNHLPredictor
 {
     public partial class Default : Page
     {
-        public static TeamCollection TeamsCollection;
+        public static TeamCollection TeamsCollection { get; private set; }
 
-        public static ObservableCollection<Roster2> PersonsCollection;
+        public static ObservableCollection<Roster2> PersonsCollection { get; private set; }
 
-        public static List<Player> PlayersMemory;
-
-        public static ApiLoader Loader;
+        public static List<Player> PlayersMemory { get; private set; }
 
         private static string[] PLAYER_URL = { "https://nhl.bamcontent.com/images/headshots/current/168x168/", ".jpg" };
         private static string[] TEAM_URL = { "https://www-league.nhlstatic.com/builds/site-core/01c1bfe15805d69e3ac31daa090865845c189b1d_1458063644/images/team/logo/current/", "_dark.svg" };
@@ -35,7 +33,6 @@ namespace WebNHLPredictor
         {
             if(!IsPostBack)//Prevents from resetting the components at every postback
             {
-                Loader = Session["Loader"] == null ? new ApiLoader() : Session["Loader"] as ApiLoader;
                 TeamsCollection = Session["TeamCollection"] == null ? new TeamCollection() : Session["TeamCollection"] as TeamCollection;
                 PlayersMemory = Session["PlayersMemory"] == null ? new List<Player>() : Session["PlayersMemory"] as List<Player>;
 
@@ -68,7 +65,7 @@ namespace WebNHLPredictor
             {
                 Session["SelectedPlayerIndex"] = playersSelect.SelectedIndex;
                 computeButton.Enabled = false;
-                var tempPlayer = PersonsCollection[playersSelect.SelectedIndex] as Roster2;
+                var person = PersonsCollection[playersSelect.SelectedIndex] as Roster2;
 
                 //Check if the player hasn't already been loaded (avoiding to call the api again)
                 if (!PlayersMemory.Any(p => p.Id.Equals(PersonsCollection[playersSelect.SelectedIndex].Id)))
@@ -76,7 +73,7 @@ namespace WebNHLPredictor
                     //result.Text = "Calculating...";
 
                     //Fetching the player through the player loader
-                    var player = new Player(Loader.loadPlayer(tempPlayer.Id), tempPlayer.Name, tempPlayer.Id);
+                    var player = new Player(ApiLoader.loadPlayer(person.Id), person.Name, person.Id);
 
                     //Adding player to the already calculated players
                     PlayersMemory.Add(Player.duplicate(player));
@@ -87,7 +84,7 @@ namespace WebNHLPredictor
                 }
                 else
                 {
-                    result.Text = PlayersMemory.First(p => p.Id.Equals(tempPlayer.Id)).ToString();
+                    result.Text = PlayersMemory.First(p => p.Id.Equals(person.Id)).ToString();
                 }
             }
         }
@@ -137,6 +134,25 @@ namespace WebNHLPredictor
             {
                 img.ImageUrl = url[0] + id + url[1];
             }
+        }
+        
+        /// <summary>
+        /// Initializes the teams collection through TeamCollection's contsructor
+        /// </summary>
+        public static void LoadTeamsCollection()
+        {
+            TeamsCollection = new TeamCollection();
+        }
+
+
+        public static void AddToPlayersMemory(Player p)
+        {
+            if (PlayersMemory == null)
+            {
+                PlayersMemory = new List<Player>();
+            }
+
+            PlayersMemory.Add(p);
         }
     }
 }
