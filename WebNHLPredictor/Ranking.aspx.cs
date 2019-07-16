@@ -1,18 +1,15 @@
 ﻿using SeasonPredict;
 using System;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
 namespace WebNHLPredictor
 {
-    public partial class Contact : Page
+    public partial class Ranking : Page
     {
-        private enum Source
-        {
-            Internal, External
-        }
         protected DataTable dt;
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -31,14 +28,12 @@ namespace WebNHLPredictor
                 dt = Session["DataTable"] as DataTable;
             }
 
-            if (Default.PlayersMemory != null)
+            exportButton.Visible = false;
+
+            if (Default.PlayersMemory != null && Default.PlayersMemory.Count > 0)
             {
                 //Calling the populating method
                 PopulateGrid();
-
-                //Binding grid to the data table
-                rankingGrid.DataSource = dt;
-                rankingGrid.DataBind();
             }
         }
 
@@ -60,6 +55,10 @@ namespace WebNHLPredictor
             }
 
             Session["DataTable"] = dt;
+            //Binding grid to the data table
+            rankingGrid.DataSource = dt;
+            rankingGrid.DataBind();
+            exportButton.Visible = true;
         }
 
         /// <summary>
@@ -110,12 +109,13 @@ namespace WebNHLPredictor
         protected void ComputeAll_Click(object sender, EventArgs e)
         {
             dt.Rows.Clear();
+            Default.ResetPlayersMemory();
 
             if (Default.TeamsCollection != null)
             {
-                foreach (Team team in Default.TeamsCollection)
-                {
-                    foreach(Roster2 person in team.PersonList)
+                //foreach (Team team in Default.TeamsCollection)
+                //{
+                    foreach(Roster2 person in Default.TeamsCollection[0].PersonList)
                     {
                         var player = ApiLoader.loadPlayer(person.Id);
                         player.FullName = person.Name;
@@ -126,7 +126,7 @@ namespace WebNHLPredictor
                             Default.AddToPlayersMemory(player);
                         }
                     }
-                }
+               // }
 
                 rankingGrid.DataSource = dt;
                 rankingGrid.DataBind();
@@ -140,7 +140,35 @@ namespace WebNHLPredictor
                 //Callback to the method with a now initialized TeamsCollection
                 ComputeAll_Click(sender, e);
             }
+
+            computeAllButton.Visible = false;
+            exportButton.Visible = true;
         }
 
+        /// <summary>
+        /// Exports the ranking grid to a Word file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void Export_Click(object sender, EventArgs e)
+        {
+            if (rankingGrid.Rows.Count > 0)
+            {
+                Response.ClearContent();
+                Response.AppendHeader("content-disposition", "attachment; filename=ranking.doc");
+                Response.ContentType = "application/word";
+                StringWriter stringWriter = new StringWriter();
+                HtmlTextWriter htw = new HtmlTextWriter(stringWriter);
+                rankingGrid.HeaderRow.Style.Clear();
+                rankingGrid.HeaderRow.Style.Add("background-color", "#999999");
+                rankingGrid.RenderControl(htw);
+                Response.Write(stringWriter.ToString());
+                Response.End();
+            }
+        }
+
+        //Prevents the RenderControl method from a Gridview from verifying the rendering
+        public override void VerifyRenderingInServerForm(Control control) {}
+        
     }
 }

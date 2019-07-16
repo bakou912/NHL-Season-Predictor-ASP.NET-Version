@@ -15,3 +15,7 @@
 .rankingGrid a:hover {
     color: grey;
 }
+
+.export {
+    margin-bottom: 10px;
+}

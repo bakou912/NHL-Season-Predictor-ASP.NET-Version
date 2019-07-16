@@ -70,8 +70,6 @@ namespace WebNHLPredictor
                 //Check if the player hasn't already been loaded (avoiding to call the api again)
                 if (!PlayersMemory.Any(p => p.Id.Equals(PersonsCollection[playersSelect.SelectedIndex].Id)))
                 {
-                    //result.Text = "Calculating...";
-
                     //Fetching the player through the player loader
                     var player = new Player(ApiLoader.loadPlayer(person.Id), person.Name, person.Id);
 
@@ -153,6 +151,10 @@ namespace WebNHLPredictor
             }
 
             PlayersMemory.Add(p);
+        }
+        public static void ResetPlayersMemory()
+        {
+            PlayersMemory = new List<Player>();
         }
     }
 }
