@@ -2,13 +2,7 @@
 <%@ Import Namespace="System.Data" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
-    
-    <script type="text/javascript">
-        function disableButton() {
 
-        }
-
-    </script>
     <asp:UpdatePanel ID="UpdatePanel1" runat="server">
         <ContentTemplate>
                 <div id="content">
@@ -41,4 +35,5 @@
                 </div>
             </ContentTemplate>
     </asp:UpdatePanel>
+    <asp:Button ID="Button1" runat="server" Text="Calibrate" onclick="Calibrate"/>
 </asp:Content>

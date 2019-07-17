@@ -6,6 +6,9 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using NHLPredictorASP.Classes;
 using WebNHLPredictor;
+using DataTable = System.Data.DataTable;
+using Page = System.Web.UI.Page;
+using Spire.Doc;
 
 namespace NHLPredictorASP
 {
@@ -16,13 +19,7 @@ namespace NHLPredictorASP
         {
             if (Session["DataTable"] == null)
             {
-                _dt = new DataTable();
-                //Initiating data table's column model
-                _dt.Columns.Add("Name", typeof(string));
-                _dt.Columns.Add("A", typeof(int));
-                _dt.Columns.Add("G", typeof(int));
-                _dt.Columns.Add("P", typeof(int));
-                _dt.Columns.Add("GP", typeof(int));
+                InitDataTable();
             }
             else
             {
@@ -39,10 +36,31 @@ namespace NHLPredictorASP
         }
 
         /// <summary>
+        /// Initializes the DataTable _dt with the right columns
+        /// </summary>
+        private void InitDataTable()
+        {
+            _dt = new DataTable("Ranking");
+            //Initiating data table's column model
+            _dt.Columns.Add("Name", typeof(string));
+            _dt.Columns.Add("A", typeof(int));
+            _dt.Columns.Add("G", typeof(int));
+            _dt.Columns.Add("P", typeof(int));
+            _dt.Columns.Add("GP", typeof(int));
+        }
+
+        /// <summary>
         /// Populates and binds the grid to the player memory
         /// </summary>
         private void PopulateGrid()
         {
+            exportButton.Visible = true;
+
+            if (Default.PlayersMemory.Count <= _dt.Rows.Count)
+            {
+                return;
+            }
+
             _dt.Rows.Clear();
 
             //Adds players to the data table
@@ -60,14 +78,13 @@ namespace NHLPredictorASP
             }
 
             BindGrid();
-            exportButton.Visible = true;
         }
 
         /// <summary>
-        /// Sorts the ranking gridview according to a specific column
+        /// Sorts the ranking GridView according to a specific column
         /// Can be descending or ascending
         /// </summary>
-        protected void SortColumn_Event(object sender, System.Web.UI.WebControls.GridViewSortEventArgs e)
+        protected void SortColumn_Event(object sender, GridViewSortEventArgs e)
         {
             var direction = SortDirection.Ascending;
 
@@ -80,7 +97,7 @@ namespace NHLPredictorASP
             var rows = direction == SortDirection.Descending
                 ? _dt.Select().OrderByDescending(r => r[e.SortExpression]).ToArray()
                 : _dt.Select().OrderBy(r => r[e.SortExpression]).ToArray();
-            
+
             _dt = rows.CopyToDataTable();
 
             //Setting session sorting states to present states so that sorting is reversed each time
@@ -100,13 +117,12 @@ namespace NHLPredictorASP
         protected void ComputeAll_Click(object sender, EventArgs e)
         {
             _dt.Rows.Clear();
-            Default.ResetPlayersMemory();
 
             if (Default.TeamsCollection != null)
             {
-                foreach (Team team in Default.TeamsCollection)
+                foreach (var team in Default.TeamsCollection)
                 {
-                    foreach(Roster2 person in team.PersonList)
+                    foreach(var person in team.PersonList)
                     {
                         var player = ApiLoader.LoadPlayer(DateTime.Now.Year,person.Id);
                         player.FullName = person.Name;
@@ -115,10 +131,7 @@ namespace NHLPredictorASP
                         {
                             continue;
                         }
-
-                        _dt.Rows.Add(player.FullName, player.ExpectedSeason.Assists, player.ExpectedSeason.Goals, player.ExpectedSeason.Points, player.ExpectedSeason.GamesPlayed);
-                        Default.AddToPlayersMemory(player);
-                    }
+                        _dt.Rows.Add(player.FullName, player.ExpectedSeason.Assists, player.ExpectedSeason.Goals, player.ExpectedSeason.Points, player.ExpectedSeason.GamesPlayed); }
                 }
                 BindGrid();
             }
@@ -137,8 +150,12 @@ namespace NHLPredictorASP
             exportButton.Visible = true;
         }
 
+        /// <summary>
+        /// Binds the DataTable to the ranking GridView
+        /// </summary>
         protected void BindGrid()
         {
+            _dt.AcceptChanges();
             Session["DataTable"] = _dt;
             rankingGrid.DataSource = _dt;
             rankingGrid.DataBind();
@@ -159,16 +176,19 @@ namespace NHLPredictorASP
             Response.ClearContent();
             Response.AppendHeader("content-disposition", "attachment; filename=ranking.doc");
             Response.ContentType = "application/word";
+
             var stringWriter = new StringWriter();
             var htw = new HtmlTextWriter(stringWriter);
+
             rankingGrid.HeaderRow.Style.Clear();
             rankingGrid.HeaderRow.Style.Add("background-color", "#999999");
             rankingGrid.RenderControl(htw);
+
             Response.Write(stringWriter.ToString());
             Response.End();
         }
 
-        //Prevents the RenderControl method from verifying the rendering for the Gridview
+        //Prevents the RenderControl method from verifying the rendering for the ranking GridView
         public override void VerifyRenderingInServerForm(Control control) {}
         
     }

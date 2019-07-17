@@ -156,5 +156,11 @@ namespace WebNHLPredictor
         {
             PlayersMemory = new List<Player>();
         }
+
+        protected void Calibrate(object sender, EventArgs e)
+        {
+            Player.CalibrateCalculation();
+            Response.Write(Player.Adjustment);
+        }
     }
 }

@@ -73,7 +73,6 @@ namespace NHLPredictorASP.Classes
 
             while (nullSeasonCount <= 4)
             {
-                    //Storing the current season coming from the deserialization of the response's content
                 var newSeason = GetSeason(year, id);
 
                 if (newSeason != null)
@@ -82,7 +81,7 @@ namespace NHLPredictorASP.Classes
                      the season reading process should only be stopped when there are more than 4 consecutive inactive seasons*/
                     nullSeasonCount = 0;
 
-                    //Addig the season to the season list
+                    //Adding the season to the season list
                     seasonList.Add(newSeason);
                 }
                 else

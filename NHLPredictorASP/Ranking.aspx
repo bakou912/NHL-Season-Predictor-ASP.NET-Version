@@ -10,7 +10,7 @@
             <br />
         </div>
         <div class="row">
-            <asp:GridView ID="rankingGrid" CssClass="rankingGrid" runat="server" AllowSorting="True" OnSorting="SortColumn_Event" CellPadding="5"/>
+            <asp:GridView ID="rankingGrid" CssClass="rankingGrid" runat="server" AutoPostBack="True" AllowSorting="True" OnSorting="SortColumn_Event" CellPadding="5"/>
             <br/>
             <asp:Button ID="computeAllButton" runat="server" OnClick="ComputeAll_Click" Text="Compute All Players" />
         </div>

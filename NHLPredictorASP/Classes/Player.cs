@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace NHLPredictorASP.Classes
@@ -7,15 +8,15 @@ namespace NHLPredictorASP.Classes
     #region Player class
     public class Player : Person
     {
-        public List<Season> SeasonList { get; private set; }
-        public Season ExpectedSeason { get; private set; }
+        public List<Season> SeasonList { get; }
+        public Season ExpectedSeason { get; }
 
         public bool HasSufficientInfo { get; private set; }
 
         public static double Adjustment { get; private set; } = 0;
 
-        public void add(Season s) => SeasonList.Add(s);
-        public void remove(Season s) => SeasonList.Remove(s);
+        public void Add(Season s) => SeasonList.Add(s);
+        public void Remove(Season s) => SeasonList.Remove(s);
 
         public Player(List<Season> seasonsToDuplicate)
         {
@@ -26,26 +27,27 @@ namespace NHLPredictorASP.Classes
 
             foreach (var s in seasonsToDuplicate)
             {
-                add(Season.duplicate(s));
+                Add(Season.duplicate(s));
             }
-            calculateExpectedSeason();
+            CalculateExpectedSeason();
         }
 
         public static void CalibrateCalculation()
         {
-            TeamCollection teams = new TeamCollection();
+            var teams = new TeamCollection();
 
             //Setting the starting year to the last completed season
-            var year = DateTime.Now.Year - 1;
 
-            var totalPoints = 0;
-            var totalExpectedPoints = 0;
 
-            foreach (Team team in teams)
+            var totalPoints = 0.0;
+            var totalExpectedPoints = 0.0;
+
+            foreach (var team in teams)
             {
-                foreach (Roster2 person in team.PersonList)
+                foreach (var person in team.PersonList)
                 {
-                    for (int i = 0; i < 5; i++)
+                    var year = DateTime.Now.Year;
+                    for (var i = 0; i < 5; i++)
                     {
                         var player = ApiLoader.LoadPlayer(year - 1, person.Id);
 
@@ -58,12 +60,15 @@ namespace NHLPredictorASP.Classes
                         year--;
 
                         totalPoints += actualSeason.Points;
-                        totalExpectedPoints = player.ExpectedSeason.Points;
+                        totalExpectedPoints += player.ExpectedSeason.Points;
                     }
                 }
             }
 
-            Adjustment = 2.0 - totalExpectedPoints / totalExpectedPoints;
+            var ratio = totalExpectedPoints / totalPoints;
+            Adjustment = ratio >= 1.0 
+                        ? 2.0 - ratio 
+                        : 1 + (1 - ratio);
         }
         public Player(Player p, string name, string id) : this(p.SeasonList)
         {
@@ -81,7 +86,7 @@ namespace NHLPredictorASP.Classes
         /// <summary>
         /// Calculates an estimation of the player's next season by computing a weighted average with the most important season being the most recent
         /// </summary>
-        public void calculateExpectedSeason()
+        public void CalculateExpectedSeason()
         {
             var total = 0.0;
             var weightsList = new List<double>();
@@ -93,17 +98,17 @@ namespace NHLPredictorASP.Classes
                 {
                     if (SeasonList[i].GamesPlayed >= averageGames)//If above games played average
                     {
-                        addWeight(weightsList, i);
+                        AddWeight(weightsList, i);
                     }
                     else//Eliminate season with below average games played
                     {
-                        remove(SeasonList[i]);
+                        Remove(SeasonList[i]);
                         i--;//Stay at the same index since the next one is moved back
                     }
                 }
                 else
                 {
-                    addWeight(weightsList, i);
+                    AddWeight(weightsList, i);
                 }
             }
             //Total of all absolute weights used to calculate relative weight of each season in next step
@@ -111,7 +116,7 @@ namespace NHLPredictorASP.Classes
 
             for (i = 0; i < weightsList.Count; i++)
             {
-                incrementSeasonWeight(weightsList, i, total);
+                IncrementSeasonWeight(weightsList, i, total);
             }
 
             if (ExpectedSeason.GamesPlayed > 82)
@@ -124,7 +129,7 @@ namespace NHLPredictorASP.Classes
 
             if (Adjustment > 0)
             {
-                adjust();
+                Adjust();
             }
 
             ExpectedSeason.calculatePoints();
@@ -133,7 +138,7 @@ namespace NHLPredictorASP.Classes
         /// <summary>
         /// Adjusts the player's stats according to the Adjustment ratio
         /// </summary>
-        private void adjust()
+        private void Adjust()
         {
             ExpectedSeason.Assists = (int)Math.Round(ExpectedSeason.Assists * Adjustment);
             ExpectedSeason.Goals = (int)Math.Round(ExpectedSeason.Goals * Adjustment);
@@ -145,7 +150,7 @@ namespace NHLPredictorASP.Classes
         /// <param name="weightList">Current list of weights each season has on the overall calculation</param>
         /// <param name="i">Current season index</param>
         /// <param name="total">Sum of all season weights</param>
-        private void incrementSeasonWeight(List<double> weightList, int i, double total)
+        private void IncrementSeasonWeight(List<double> weightList, int i, double total)
         {
             weightList[i] /= total;//Making this season's weight into percentage
             ExpectedSeason.Assists += (int)Math.Round((SeasonList[i].Assists * weightList[i]));
@@ -153,7 +158,7 @@ namespace NHLPredictorASP.Classes
             ExpectedSeason.GamesPlayed += (int)Math.Round((SeasonList[i].GamesPlayed * weightList[i]));
         }
 
-        private void addWeight(List<double> weightsList, int i)
+        private void AddWeight(List<double> weightsList, int i)
         {
             if (i == 0)
             {
