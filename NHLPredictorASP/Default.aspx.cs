@@ -6,7 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using SeasonPredict;
+using NHLPredictorASP.Classes;
 
 namespace WebNHLPredictor
 {
@@ -18,8 +18,8 @@ namespace WebNHLPredictor
 
         public static List<Player> PlayersMemory { get; private set; }
 
-        private static string[] PLAYER_URL = { "https://nhl.bamcontent.com/images/headshots/current/168x168/", ".jpg" };
-        private static string[] TEAM_URL = { "https://www-league.nhlstatic.com/builds/site-core/01c1bfe15805d69e3ac31daa090865845c189b1d_1458063644/images/team/logo/current/", "_dark.svg" };
+        private static readonly string[] PlayerUrl = { "https://nhl.bamcontent.com/images/headshots/current/168x168/", ".jpg" };
+        private static readonly string[] TeamUrl = { "https://www-league.nhlstatic.com/builds/site-core/01c1bfe15805d69e3ac31daa090865845c189b1d_1458063644/images/team/logo/current/", "_dark.svg" };
 
         /// <summary>
         /// Loads the page and initializes the following components:
@@ -49,8 +49,8 @@ namespace WebNHLPredictor
                 playersSelect.DataSource = PersonsCollection;
                 playersSelect.DataBind();
 
-                ChangeImage(teamImg, TEAM_URL, TeamsCollection[teamIndex].Id);
-                ChangeImage(playerImg, PLAYER_URL, PersonsCollection[playerIndex].Id);
+                ChangeImage(teamImg, TeamUrl, TeamsCollection[teamIndex].Id);
+                ChangeImage(playerImg, PlayerUrl, PersonsCollection[playerIndex].Id);
             }
         }
 
@@ -71,7 +71,7 @@ namespace WebNHLPredictor
                 if (!PlayersMemory.Any(p => p.Id.Equals(PersonsCollection[playersSelect.SelectedIndex].Id)))
                 {
                     //Fetching the player through the player loader
-                    var player = new Player(ApiLoader.loadPlayer(person.Id), person.Name, person.Id);
+                    var player = new Player(ApiLoader.LoadPlayer(DateTime.Now.Year, person.Id), person.Name, person.Id);
 
                     //Adding player to the already calculated players
                     PlayersMemory.Add(Player.duplicate(player));
@@ -100,7 +100,7 @@ namespace WebNHLPredictor
             playersSelect.DataSource = PersonsCollection;
             playersSelect.DataBind();
 
-            ChangeImage(teamImg, TEAM_URL, TeamsCollection[teamsSelect.SelectedIndex].Id);
+            ChangeImage(teamImg, TeamUrl, TeamsCollection[teamsSelect.SelectedIndex].Id);
             EnableComputeButton(sender, e);
         }
 
@@ -123,7 +123,7 @@ namespace WebNHLPredictor
                 computeButton.Enabled = true;
             }
 
-            ChangeImage(playerImg, PLAYER_URL, PersonsCollection[playersSelect.SelectedIndex].Id);
+            ChangeImage(playerImg, PlayerUrl, PersonsCollection[playersSelect.SelectedIndex].Id);
         }
 
         private void ChangeImage(Image img, string[] url, string id)

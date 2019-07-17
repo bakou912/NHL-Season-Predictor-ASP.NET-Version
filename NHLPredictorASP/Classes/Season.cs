@@ -1,4 +1,4 @@
-﻿namespace SeasonPredict
+﻿namespace NHLPredictorASP.Classes
 {
     #region Season Class representing the offensive production of a Player for a given year
 

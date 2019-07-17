@@ -1,9 +1,14 @@
 ﻿<%@ Page Title="NHL Season Predictor" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="WebNHLPredictor.Default" %>
 <%@ Import Namespace="System.Data" %>
-<%@ Import Namespace="SeasonPredict" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
+    
+    <script type="text/javascript">
+        function disableButton() {
 
+        }
+
+    </script>
     <asp:UpdatePanel ID="UpdatePanel1" runat="server">
         <ContentTemplate>
                 <div id="content">

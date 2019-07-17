@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SeasonPredict
+namespace NHLPredictorASP.Classes
 {
     #region Player class
     public class Player : Person
@@ -31,7 +31,7 @@ namespace SeasonPredict
             calculateExpectedSeason();
         }
 
-        public static void calibrateCalculation()
+        public static void CalibrateCalculation()
         {
             TeamCollection teams = new TeamCollection();
 
@@ -47,14 +47,14 @@ namespace SeasonPredict
                 {
                     for (int i = 0; i < 5; i++)
                     {
-                        var player = ApiLoader.loadPlayer(year - 1, person.Id);
+                        var player = ApiLoader.LoadPlayer(year - 1, person.Id);
 
                         if (!player.HasSufficientInfo)
                         {
                             break;
                         }
 
-                        var actualSeason = ApiLoader.getSeason(year, person.Id);
+                        var actualSeason = ApiLoader.GetSeason(year, person.Id);
                         year--;
 
                         totalPoints += actualSeason.Points;

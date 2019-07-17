@@ -1,25 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using Newtonsoft.Json;
+using RestSharp;
 
-namespace SeasonPredict
+namespace NHLPredictorASP.Classes
 {
-    using RestSharp;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Linq;
-
-
     public static class ApiLoader
     {
         /// <summary>The base UR for the NHL's apiL</summary>
-        private static readonly string baseUrl = "https://statsapi.web.nhl.com/api/v1";
+        private static readonly string BaseUrl = "https://statsapi.web.nhl.com/api/v1";
 
         /// <summary>The rest client</summary>
-        private static readonly RestClient restClient = new RestClient(baseUrl);
+        private static readonly RestClient RestClient = new RestClient(BaseUrl);
 
         /// <summary>Fetching and deserializing all active teams</summary>
         /// <returns>The complete list of active teams (with their roster)</returns>
-        public static ObservableCollection<Team> loadTeams()
+        public static ObservableCollection<Team> LoadTeams()
         {
             var teamCollection = new ObservableCollection<Team>();
 
@@ -29,7 +27,7 @@ namespace SeasonPredict
                 Resource = "teams/?expand=team.roster"
              };
 
-            var response = restClient.Execute(request);
+            var response = RestClient.Execute(request);
 
             var validTeamList = JsonConvert.DeserializeObject<TeamList>(response.Content)?.Teams;
 
@@ -67,7 +65,7 @@ namespace SeasonPredict
         /// </summary>
         /// <param name="id">Player ID in the NHL's database</param>
         /// <returns>The player </returns>
-        public static Player loadPlayer(int year, string id)
+        public static Player LoadPlayer(int year, string id)
         {
 
             var nullSeasonCount = 0;
@@ -76,7 +74,7 @@ namespace SeasonPredict
             while (nullSeasonCount <= 4)
             {
                     //Storing the current season coming from the deserialization of the response's content
-                var newSeason = getSeason(year, id);
+                var newSeason = GetSeason(year, id);
 
                 if (newSeason != null)
                 {
@@ -105,7 +103,7 @@ namespace SeasonPredict
         /// <param name="year">Season year</param>
         /// <param name="id">Player ID in the NHL's database</param>
         /// <returns>The season for the year for a player with the specified ID</returns>
-        public static Season getSeason(int year, string id)
+        public static Season GetSeason(int year, string id)
         {
             //Base URL for the wanted player
             var baseResource = "people/" + id + "/stats?stats=statsSingleSeason&season=" + $"{year - 1}{year}";
@@ -119,7 +117,7 @@ namespace SeasonPredict
             };
 
             //Storing rest request's execution response
-            var response = restClient.Execute(restRequest);
+            var response = RestClient.Execute(restRequest);
 
             try
             {

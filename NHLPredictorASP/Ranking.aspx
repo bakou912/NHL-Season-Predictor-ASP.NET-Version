@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Ranking" Language="C#" MasterPageFile="~/Site.Master" Async="true" AutoEventWireup="true" CodeBehind="Ranking.aspx.cs" Inherits="WebNHLPredictor.Ranking" EnableEventValidation="false" %>
+﻿<%@ Page Title="Ranking" Language="C#" MasterPageFile="~/Site.Master" Async="true" AutoEventWireup="true" CodeBehind="Ranking.aspx.cs" Inherits="NHLPredictorASP.Ranking" EnableEventValidation="false" %>
 
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">

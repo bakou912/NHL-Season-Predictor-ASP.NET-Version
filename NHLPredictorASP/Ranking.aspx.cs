@@ -1,31 +1,32 @@
-﻿using SeasonPredict;
-using System;
+﻿using System;
 using System.Data;
 using System.IO;
 using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using NHLPredictorASP.Classes;
+using WebNHLPredictor;
 
-namespace WebNHLPredictor
+namespace NHLPredictorASP
 {
     public partial class Ranking : Page
     {
-        protected DataTable dt;
+        private DataTable _dt;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["DataTable"] == null)
             {
-                dt = new DataTable();
+                _dt = new DataTable();
                 //Initiating data table's column model
-                dt.Columns.Add("Name", typeof(string));
-                dt.Columns.Add("A", typeof(int));
-                dt.Columns.Add("G", typeof(int));
-                dt.Columns.Add("P", typeof(int));
-                dt.Columns.Add("GP", typeof(int));
+                _dt.Columns.Add("Name", typeof(string));
+                _dt.Columns.Add("A", typeof(int));
+                _dt.Columns.Add("G", typeof(int));
+                _dt.Columns.Add("P", typeof(int));
+                _dt.Columns.Add("GP", typeof(int));
             }
             else
             {
-                dt = Session["DataTable"] as DataTable;
+                _dt = Session["DataTable"] as DataTable;
             }
 
             exportButton.Visible = false;
@@ -42,7 +43,7 @@ namespace WebNHLPredictor
         /// </summary>
         private void PopulateGrid()
         {
-            dt.Rows.Clear();
+            _dt.Rows.Clear();
 
             //Adds players to the data table
             foreach (var player in Default.PlayersMemory)
@@ -50,7 +51,11 @@ namespace WebNHLPredictor
                 //Adding new row containing the player's expected season's info if it has sufficient information
                 if (player.HasSufficientInfo)
                 {
-                    dt.Rows.Add(player.FullName, player.ExpectedSeason.Assists, player.ExpectedSeason.Goals, player.ExpectedSeason.Points, player.ExpectedSeason.GamesPlayed);
+                    _dt.Rows.Add(player.FullName,
+                                player.ExpectedSeason.Assists,
+                                player.ExpectedSeason.Goals,
+                                player.ExpectedSeason.Points,
+                                player.ExpectedSeason.GamesPlayed);
                 }
             }
 
@@ -64,26 +69,19 @@ namespace WebNHLPredictor
         /// </summary>
         protected void SortColumn_Event(object sender, System.Web.UI.WebControls.GridViewSortEventArgs e)
         {
-            SortDirection direction = SortDirection.Ascending;
+            var direction = SortDirection.Ascending;
 
             if (Session["SortExpression"] == null || (SortDirection)Session["SortDirection"] == SortDirection.Ascending || !Session["SortExpression"].Equals(e.SortExpression))
             {
                 direction = SortDirection.Descending;
             }
 
-            DataRow[] rows;
-
             //Sorting according to the sorting direction
-            if (direction == SortDirection.Descending)
-            {
-                rows = dt.Select().OrderByDescending(r => r[e.SortExpression]).ToArray();
-            }
-            else
-            {
-                rows = dt.Select().OrderBy(r => r[e.SortExpression]).ToArray();
-            }
+            var rows = direction == SortDirection.Descending
+                ? _dt.Select().OrderByDescending(r => r[e.SortExpression]).ToArray()
+                : _dt.Select().OrderBy(r => r[e.SortExpression]).ToArray();
             
-            dt = rows.CopyToDataTable();
+            _dt = rows.CopyToDataTable();
 
             //Setting session sorting states to present states so that sorting is reversed each time
             Session["SortDirection"] = direction;
@@ -91,7 +89,6 @@ namespace WebNHLPredictor
             {
                 Session["SortExpression"] = e.SortExpression;
             }
-
             BindGrid();
         }
 
@@ -102,7 +99,7 @@ namespace WebNHLPredictor
         /// <param name="e"></param>
         protected void ComputeAll_Click(object sender, EventArgs e)
         {
-            dt.Rows.Clear();
+            _dt.Rows.Clear();
             Default.ResetPlayersMemory();
 
             if (Default.TeamsCollection != null)
@@ -111,17 +108,18 @@ namespace WebNHLPredictor
                 {
                     foreach(Roster2 person in team.PersonList)
                     {
-                        var player = ApiLoader.loadPlayer(DateTime.Now.Year,person.Id);
+                        var player = ApiLoader.LoadPlayer(DateTime.Now.Year,person.Id);
                         player.FullName = person.Name;
 
-                        if (player.HasSufficientInfo)
+                        if (!player.HasSufficientInfo)
                         {
-                            dt.Rows.Add(player.FullName, player.ExpectedSeason.Assists, player.ExpectedSeason.Goals, player.ExpectedSeason.Points, player.ExpectedSeason.GamesPlayed);
-                            Default.AddToPlayersMemory(player);
+                            continue;
                         }
+
+                        _dt.Rows.Add(player.FullName, player.ExpectedSeason.Assists, player.ExpectedSeason.Goals, player.ExpectedSeason.Points, player.ExpectedSeason.GamesPlayed);
+                        Default.AddToPlayersMemory(player);
                     }
                 }
-
                 BindGrid();
             }
             else
@@ -141,9 +139,9 @@ namespace WebNHLPredictor
 
         protected void BindGrid()
         {
-            rankingGrid.DataSource = dt;
+            Session["DataTable"] = _dt;
+            rankingGrid.DataSource = _dt;
             rankingGrid.DataBind();
-            Session["DataTable"] = dt;
         }
 
         /// <summary>
@@ -153,19 +151,21 @@ namespace WebNHLPredictor
         /// <param name="e"></param>
         protected void Export_Click(object sender, EventArgs e)
         {
-            if (rankingGrid.Rows.Count > 0)
+            if (rankingGrid.Rows.Count <= 0)
             {
-                Response.ClearContent();
-                Response.AppendHeader("content-disposition", "attachment; filename=ranking.doc");
-                Response.ContentType = "application/word";
-                StringWriter stringWriter = new StringWriter();
-                HtmlTextWriter htw = new HtmlTextWriter(stringWriter);
-                rankingGrid.HeaderRow.Style.Clear();
-                rankingGrid.HeaderRow.Style.Add("background-color", "#999999");
-                rankingGrid.RenderControl(htw);
-                Response.Write(stringWriter.ToString());
-                Response.End();
+                return;
             }
+
+            Response.ClearContent();
+            Response.AppendHeader("content-disposition", "attachment; filename=ranking.doc");
+            Response.ContentType = "application/word";
+            var stringWriter = new StringWriter();
+            var htw = new HtmlTextWriter(stringWriter);
+            rankingGrid.HeaderRow.Style.Clear();
+            rankingGrid.HeaderRow.Style.Add("background-color", "#999999");
+            rankingGrid.RenderControl(htw);
+            Response.Write(stringWriter.ToString());
+            Response.End();
         }
 
         //Prevents the RenderControl method from verifying the rendering for the Gridview

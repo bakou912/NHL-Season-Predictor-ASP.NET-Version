@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data;
 using System.Linq;
-using System.Web.Management;
 
-namespace SeasonPredict
+namespace NHLPredictorASP.Classes
 {
     #region Objects needed for deserialization of the JSON teams/rosters coming from the NHL's API
     public class Roster2
@@ -70,12 +68,12 @@ namespace SeasonPredict
         //Default and only constructor
         public TeamCollection()
         {
-            teamsInit();
+            TeamsInit();
         }
 
-        private void teamsInit()
+        private void TeamsInit()
         {
-            var temp = ApiLoader.loadTeams().OrderBy(t => t.Name);
+            var temp = ApiLoader.LoadTeams().OrderBy(t => t.Name);
             foreach (var t in temp)
             {
                 Add(t);
