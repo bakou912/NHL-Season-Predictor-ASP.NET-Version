@@ -54,10 +54,7 @@ namespace WebNHLPredictor
                 }
             }
 
-            Session["DataTable"] = dt;
-            //Binding grid to the data table
-            rankingGrid.DataSource = dt;
-            rankingGrid.DataBind();
+            BindGrid();
             exportButton.Visible = true;
         }
 
@@ -89,16 +86,13 @@ namespace WebNHLPredictor
             dt = rows.CopyToDataTable();
 
             //Setting session sorting states to present states so that sorting is reversed each time
-            Session["DataTable"] = dt;
             Session["SortDirection"] = direction;
             if (Session["SortExpression"] == null || !Session["SortExpression"].Equals(e.SortExpression))
             {
                 Session["SortExpression"] = e.SortExpression;
             }
 
-            //Binding grid to the data table
-            rankingGrid.DataSource = dt;
-            rankingGrid.DataBind();
+            BindGrid();
         }
 
         /// <summary>
@@ -113,11 +107,11 @@ namespace WebNHLPredictor
 
             if (Default.TeamsCollection != null)
             {
-                //foreach (Team team in Default.TeamsCollection)
-                //{
-                    foreach(Roster2 person in Default.TeamsCollection[0].PersonList)
+                foreach (Team team in Default.TeamsCollection)
+                {
+                    foreach(Roster2 person in team.PersonList)
                     {
-                        var player = ApiLoader.loadPlayer(person.Id);
+                        var player = ApiLoader.loadPlayer(DateTime.Now.Year,person.Id);
                         player.FullName = person.Name;
 
                         if (player.HasSufficientInfo)
@@ -126,12 +120,9 @@ namespace WebNHLPredictor
                             Default.AddToPlayersMemory(player);
                         }
                     }
-               // }
+                }
 
-                rankingGrid.DataSource = dt;
-                rankingGrid.DataBind();
-
-                Session["DataTable"] = dt;
+                BindGrid();
             }
             else
             {
@@ -141,8 +132,18 @@ namespace WebNHLPredictor
                 ComputeAll_Click(sender, e);
             }
 
+            //Making the computeAll button invisible
             computeAllButton.Visible = false;
+
+            //Making the export button visible
             exportButton.Visible = true;
+        }
+
+        protected void BindGrid()
+        {
+            rankingGrid.DataSource = dt;
+            rankingGrid.DataBind();
+            Session["DataTable"] = dt;
         }
 
         /// <summary>
@@ -167,7 +168,7 @@ namespace WebNHLPredictor
             }
         }
 
-        //Prevents the RenderControl method from a Gridview from verifying the rendering
+        //Prevents the RenderControl method from verifying the rendering for the Gridview
         public override void VerifyRenderingInServerForm(Control control) {}
         
     }

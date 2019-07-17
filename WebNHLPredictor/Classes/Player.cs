@@ -7,10 +7,12 @@ namespace SeasonPredict
     #region Player class
     public class Player : Person
     {
-        public List<Season> SeasonList { get;}
-        public Season ExpectedSeason { get;}
+        public List<Season> SeasonList { get; private set; }
+        public Season ExpectedSeason { get; private set; }
 
         public bool HasSufficientInfo { get; private set; }
+
+        public static double Adjustment { get; private set; } = 0;
 
         public void add(Season s) => SeasonList.Add(s);
         public void remove(Season s) => SeasonList.Remove(s);
@@ -29,7 +31,40 @@ namespace SeasonPredict
             calculateExpectedSeason();
         }
 
+        public static void calibrateCalculation()
+        {
+            TeamCollection teams = new TeamCollection();
 
+            //Setting the starting year to the last completed season
+            var year = DateTime.Now.Year - 1;
+
+            var totalPoints = 0;
+            var totalExpectedPoints = 0;
+
+            foreach (Team team in teams)
+            {
+                foreach (Roster2 person in team.PersonList)
+                {
+                    for (int i = 0; i < 5; i++)
+                    {
+                        var player = ApiLoader.loadPlayer(year - 1, person.Id);
+
+                        if (!player.HasSufficientInfo)
+                        {
+                            break;
+                        }
+
+                        var actualSeason = ApiLoader.getSeason(year, person.Id);
+                        year--;
+
+                        totalPoints += actualSeason.Points;
+                        totalExpectedPoints = player.ExpectedSeason.Points;
+                    }
+                }
+            }
+
+            Adjustment = 2.0 - totalExpectedPoints / totalExpectedPoints;
+        }
         public Player(Player p, string name, string id) : this(p.SeasonList)
         {
             Id = id;
@@ -87,7 +122,21 @@ namespace SeasonPredict
 
             HasSufficientInfo = SeasonList.Count > 2 && ExpectedSeason.GamesPlayed >= 50;
 
+            if (Adjustment > 0)
+            {
+                adjust();
+            }
+
             ExpectedSeason.calculatePoints();
+        }
+
+        /// <summary>
+        /// Adjusts the player's stats according to the Adjustment ratio
+        /// </summary>
+        private void adjust()
+        {
+            ExpectedSeason.Assists = (int)Math.Round(ExpectedSeason.Assists * Adjustment);
+            ExpectedSeason.Goals = (int)Math.Round(ExpectedSeason.Goals * Adjustment);
         }
 
         /// <summary>
