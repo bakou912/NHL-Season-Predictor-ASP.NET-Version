@@ -6,6 +6,14 @@ using RestSharp;
 
 namespace NHLPredictorASP.Classes
 {
+    /// <summary>
+    /// Class needed for deserialization
+    /// </summary>
+    public class TeamList
+    {
+        public List<Team> Teams { get; set; }
+        //Default and only constructor
+    }
     public static class ApiLoader
     {
         /// <summary>The base UR for the NHL's apiL</summary>
@@ -26,9 +34,9 @@ namespace NHLPredictorASP.Classes
                 Resource = "teams/?expand=team.roster"
              };
 
-            var validTeamList = RestClient.Execute<TeamList>(request)?.Data.Teams;
+            var response = RestClient.Execute(request);
 
-            //var validTeamList = JsonConvert.DeserializeObject<TeamList>(response.Content)?.Teams;
+            var validTeamList = JsonConvert.DeserializeObject<TeamList>(response.Content)?.Teams;
 
             //Stopping the process if the response form the RestClient was null
             if (validTeamList == null)

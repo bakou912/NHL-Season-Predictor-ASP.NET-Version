@@ -59,24 +59,16 @@ namespace NHLPredictorASP.Classes
     #endregion
 
     #region TeamCollection class used to contain all teams fetched from the API and display them in the GUI
-    public class TeamList
+    public class TeamCollection : List<Team>
     {
-        public List<Team> Teams { get; set; }
-        //Default and only constructor
-        public TeamList()
+        public TeamCollection()
         {
-            Teams = ApiLoader.LoadTeams().OrderBy(t => t.Name).ToList();
+            foreach (var t in ApiLoader.LoadTeams().OrderBy(t => t.Name).ToList())
+            {
+                Add(t);
+            }
         }
 
-        public Team this[int flag]
-        {
-
-            // using get accessor 
-            get => Teams[flag];
-
-            // using set accessor 
-            set => Teams[flag] = value;
-        }
     }
     #endregion
 }

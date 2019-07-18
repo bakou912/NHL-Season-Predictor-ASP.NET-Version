@@ -13,7 +13,8 @@ namespace NHLPredictorASP.Classes
 
         public bool HasSufficientInfo { get; private set; }
 
-        public static double Adjustment { get; private set; } = 0;
+        //Adjustment calculated with the CalibrateCalculation method.
+        public static double Adjustment { get; private set; } = 1.00806340590399f;
 
         public void Add(Season s) => SeasonList.Add(s);
         public void Remove(Season s) => SeasonList.Remove(s);
@@ -32,31 +33,32 @@ namespace NHLPredictorASP.Classes
             CalculateExpectedSeason();
         }
 
+        /// <summary>
+        /// Calculates the adjustment needed for the ExpectedSeason's stats.
+        /// Predicts the last 5 seasons of all players in the league and compares
+        /// them with the actual last 5 seasons.
+        /// </summary>
         public static void CalibrateCalculation()
         {
-            var teamsList = new TeamList();
-
-            //Setting the starting year to the last completed season
-
-
             var totalPoints = 0.0;
             var totalExpectedPoints = 0.0;
 
-            foreach (var team in teamsList.Teams)
+            foreach (var team in new TeamCollection())
             {
                 foreach (var person in team.PersonList)
                 {
+                    //Setting the starting year to the last completed season
                     var year = DateTime.Now.Year;
                     for (var i = 0; i < 5; i++)
                     {
                         var player = ApiLoader.LoadPlayer(year - 1, person.Id);
+                        var actualSeason = ApiLoader.GetSeason(year, person.Id);
 
-                        if (!player.HasSufficientInfo)
+                        if (!player.HasSufficientInfo || actualSeason == null)
                         {
                             break;
                         }
 
-                        var actualSeason = ApiLoader.GetSeason(year, person.Id);
                         year--;
 
                         totalPoints += actualSeason.Points;

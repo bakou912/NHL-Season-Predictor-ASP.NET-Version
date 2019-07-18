@@ -57,19 +57,17 @@ namespace NHLPredictorASP
                 return;
             }
 
-            _dt.Rows.Clear();
-
-            //Adds players to the data table
-            foreach (var player in Default.PlayersMemory)
+            //Adds new players to the data table
+            for (int i = _dt.Rows.Count; i <  Default.PlayersMemory.Count; i++)
             {
                 //Adding new row containing the player's expected season's info if it has sufficient information
-                if (player.HasSufficientInfo)
+                if (Default.PlayersMemory[i].HasSufficientInfo)
                 {
-                    _dt.Rows.Add(player.FullName,
-                                player.ExpectedSeason.Assists,
-                                player.ExpectedSeason.Goals,
-                                player.ExpectedSeason.Points,
-                                player.ExpectedSeason.GamesPlayed);
+                    _dt.Rows.Add(Default.PlayersMemory[i].FullName,
+                        Default.PlayersMemory[i].ExpectedSeason.Assists,
+                        Default.PlayersMemory[i].ExpectedSeason.Goals,
+                        Default.PlayersMemory[i].ExpectedSeason.Points,
+                        Default.PlayersMemory[i].ExpectedSeason.GamesPlayed);
                 }
             }
 
@@ -114,9 +112,9 @@ namespace NHLPredictorASP
         {
             _dt.Rows.Clear();
 
-            if (Default.TeamList.Teams != null)
+            if (Default.TeamCollection != null)
             {
-                foreach (var team in Default.TeamList.Teams)
+                foreach (var team in Default.TeamCollection)
                 {
                     foreach(var person in team.PersonList)
                     {

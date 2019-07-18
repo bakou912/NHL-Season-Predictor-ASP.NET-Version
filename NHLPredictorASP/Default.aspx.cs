@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -10,7 +9,7 @@ namespace NHLPredictorASP
 {
     public partial class Default : Page
     {
-        public static TeamList TeamList { get; private set; }
+        public static TeamCollection TeamCollection { get; private set; }
 
         public static List<Roster2> PersonsCollection { get; private set; }
 
@@ -31,23 +30,23 @@ namespace NHLPredictorASP
         {
             if(!IsPostBack)//Prevents from resetting the components at every postback
             {
-                TeamList = Session["TeamList"] == null ? new TeamList() : Session["TeamList"] as TeamList;
+                TeamCollection = Session["TeamCollection"] == null ? new TeamCollection() : Session["TeamList"] as TeamCollection;
                 PlayersMemory = Session["PlayersMemory"] == null ? new List<Player>() : Session["PlayersMemory"] as List<Player>;
 
                 int teamIndex = (int?) Session["SelectedTeamIndex"] ?? 0;
                 int playerIndex = (int?) Session["SelectedPlayerIndex"] ?? 0;
 
                 teamsSelect.SelectedIndex = teamIndex;
-                teamsSelect.DataSource = TeamList;
+                teamsSelect.DataSource = TeamCollection;
                 teamsSelect.DataBind();
 
-                PersonsCollection = TeamList[teamIndex].PersonList;
+                PersonsCollection = TeamCollection[teamIndex].PersonList;
 
                 playersSelect.SelectedIndex = playerIndex;
                 playersSelect.DataSource = PersonsCollection;
                 playersSelect.DataBind();
 
-                ChangeImage(teamImg, TeamUrl, TeamList[teamIndex].Id);
+                ChangeImage(teamImg, TeamUrl, TeamCollection[teamIndex].Id);
                 ChangeImage(playerImg, PlayerUrl, PersonsCollection[playerIndex].Id);
             }
         }
@@ -94,11 +93,11 @@ namespace NHLPredictorASP
         {
             Session["SelectedPlayerIndex"] = 0;
             Session["SelectedTeamIndex"] = teamsSelect.SelectedIndex;
-            PersonsCollection = TeamList[teamsSelect.SelectedIndex].PersonList;
+            PersonsCollection = TeamCollection[teamsSelect.SelectedIndex].PersonList;
             playersSelect.DataSource = PersonsCollection;
             playersSelect.DataBind();
 
-            ChangeImage(teamImg, TeamUrl, TeamList[teamsSelect.SelectedIndex].Id);
+            ChangeImage(teamImg, TeamUrl, TeamCollection[teamsSelect.SelectedIndex].Id);
             EnableComputeButton(sender, e);
         }
 
@@ -137,7 +136,7 @@ namespace NHLPredictorASP
         /// </summary>
         public static void LoadTeamsCollection()
         {
-            TeamList = new TeamList();
+            TeamCollection = new TeamCollection();
         }
 
 
