@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using Newtonsoft.Json;
 using RestSharp;
@@ -17,9 +16,9 @@ namespace NHLPredictorASP.Classes
 
         /// <summary>Fetching and deserializing all active teams</summary>
         /// <returns>The complete list of active teams (with their roster)</returns>
-        public static ObservableCollection<Team> LoadTeams()
+        public static List<Team> LoadTeams()
         {
-            var teamCollection = new ObservableCollection<Team>();
+            var teamList = new List<Team>();
 
             var request = new RestRequest()
             {
@@ -27,11 +26,11 @@ namespace NHLPredictorASP.Classes
                 Resource = "teams/?expand=team.roster"
              };
 
-            var response = RestClient.Execute(request);
+            var validTeamList = RestClient.Execute<TeamList>(request)?.Data.Teams;
 
-            var validTeamList = JsonConvert.DeserializeObject<TeamList>(response.Content)?.Teams;
+            //var validTeamList = JsonConvert.DeserializeObject<TeamList>(response.Content)?.Teams;
 
-            //Stopping the process if the 
+            //Stopping the process if the response form the RestClient was null
             if (validTeamList == null)
             {
                 return null;
@@ -46,7 +45,7 @@ namespace NHLPredictorASP.Classes
                 }
 
                 //Deserializing the team's roster (collection of Roster2 objects)
-                team.PersonList = new ObservableCollection<Roster2>(team.PersonList.OrderBy(r => r.Person.FullName));
+                team.PersonList = new List<Roster2>(team.PersonList.OrderBy(r => r.Person.FullName));
 
                 //Removing all goaltenders from the roster
                 while (team.PersonList.Any(p => p.Code.Equals("G")))
@@ -54,10 +53,10 @@ namespace NHLPredictorASP.Classes
                     team.PersonList.Remove(team.PersonList.First(p => p.Code.Equals("G")));
                 }
 
-                teamCollection.Add(team);
+                teamList.Add(team);
             }
 
-            return teamCollection;
+            return teamList;
         }
 
         /// <summary>

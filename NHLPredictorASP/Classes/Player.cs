@@ -34,7 +34,7 @@ namespace NHLPredictorASP.Classes
 
         public static void CalibrateCalculation()
         {
-            var teams = new TeamCollection();
+            var teamsList = new TeamList();
 
             //Setting the starting year to the last completed season
 
@@ -42,7 +42,7 @@ namespace NHLPredictorASP.Classes
             var totalPoints = 0.0;
             var totalExpectedPoints = 0.0;
 
-            foreach (var team in teams)
+            foreach (var team in teamsList.Teams)
             {
                 foreach (var person in team.PersonList)
                 {
@@ -64,11 +64,7 @@ namespace NHLPredictorASP.Classes
                     }
                 }
             }
-
-            var ratio = totalExpectedPoints / totalPoints;
-            Adjustment = ratio >= 1.0 
-                        ? 2.0 - ratio 
-                        : 1 + (1 - ratio);
+            Adjustment = totalPoints / totalExpectedPoints;
         }
         public Player(Player p, string name, string id) : this(p.SeasonList)
         {
@@ -124,13 +120,9 @@ namespace NHLPredictorASP.Classes
                 ExpectedSeason.GamesPlayed = 82;
             }
 
-
             HasSufficientInfo = SeasonList.Count > 2 && ExpectedSeason.GamesPlayed >= 50;
 
-            if (Adjustment > 0)
-            {
-                Adjust();
-            }
+            Adjust();
 
             ExpectedSeason.calculatePoints();
         }

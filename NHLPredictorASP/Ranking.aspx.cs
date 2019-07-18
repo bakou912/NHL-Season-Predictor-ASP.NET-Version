@@ -5,10 +5,6 @@ using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using NHLPredictorASP.Classes;
-using WebNHLPredictor;
-using DataTable = System.Data.DataTable;
-using Page = System.Web.UI.Page;
-using Spire.Doc;
 
 namespace NHLPredictorASP
 {
@@ -56,7 +52,7 @@ namespace NHLPredictorASP
         {
             exportButton.Visible = true;
 
-            if (Default.PlayersMemory.Count <= _dt.Rows.Count)
+            if (Default.PlayersMemory.Count != 1 && Default.PlayersMemory.Count <= _dt.Rows.Count)
             {
                 return;
             }
@@ -118,9 +114,9 @@ namespace NHLPredictorASP
         {
             _dt.Rows.Clear();
 
-            if (Default.TeamsCollection != null)
+            if (Default.TeamList.Teams != null)
             {
-                foreach (var team in Default.TeamsCollection)
+                foreach (var team in Default.TeamList.Teams)
                 {
                     foreach(var person in team.PersonList)
                     {
@@ -134,6 +130,12 @@ namespace NHLPredictorASP
                         _dt.Rows.Add(player.FullName, player.ExpectedSeason.Assists, player.ExpectedSeason.Goals, player.ExpectedSeason.Points, player.ExpectedSeason.GamesPlayed); }
                 }
                 BindGrid();
+
+                //Making the computeAll button invisible
+                computeAllButton.Visible = false;
+
+                //Making the export button visible
+                exportButton.Visible = true;
             }
             else
             {
@@ -142,12 +144,6 @@ namespace NHLPredictorASP
                 //Callback to the method with a now initialized TeamsCollection
                 ComputeAll_Click(sender, e);
             }
-
-            //Making the computeAll button invisible
-            computeAllButton.Visible = false;
-
-            //Making the export button visible
-            exportButton.Visible = true;
         }
 
         /// <summary>

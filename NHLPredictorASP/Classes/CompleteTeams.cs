@@ -18,7 +18,7 @@ namespace NHLPredictorASP.Classes
 
     public class RosterList
     {
-        public ObservableCollection<Roster2> Roster { get; set; }
+        public List<Roster2> Roster { get; set; }
     }
     public class Team
     {
@@ -28,7 +28,7 @@ namespace NHLPredictorASP.Classes
         public string Name { get; set; }
         public RosterList Roster { get; set; }
 
-        public ObservableCollection<Roster2> PersonList
+        public List<Roster2> PersonList
         {
             get => Roster.Roster;
             set => Roster.Roster = value;
@@ -56,28 +56,26 @@ namespace NHLPredictorASP.Classes
         }
     }*/
 
-    public class TeamList
-    {
-        public List<Team> Teams { get; set; }
-    }
     #endregion
 
     #region TeamCollection class used to contain all teams fetched from the API and display them in the GUI
-    public class TeamCollection : ObservableCollection<Team>
+    public class TeamList
     {
+        public List<Team> Teams { get; set; }
         //Default and only constructor
-        public TeamCollection()
+        public TeamList()
         {
-            TeamsInit();
+            Teams = ApiLoader.LoadTeams().OrderBy(t => t.Name).ToList();
         }
 
-        private void TeamsInit()
+        public Team this[int flag]
         {
-            var temp = ApiLoader.LoadTeams().OrderBy(t => t.Name);
-            foreach (var t in temp)
-            {
-                Add(t);
-            }
+
+            // using get accessor 
+            get => Teams[flag];
+
+            // using set accessor 
+            set => Teams[flag] = value;
         }
     }
     #endregion
