@@ -36,25 +36,6 @@ namespace NHLPredictorASP.Classes
 
         public override string ToString() => $"{Name} ({Abbreviation})";
     }
-    //Using an ObservableCollection instead of a List for the data binding required in the GUI
-    /*public class PersonTable : DataTable
-    {
-        private ObservableCollection<Roster2> Collection;
-
-        public PersonTable(ObservableCollection<Roster2> personList)
-        {
-            Collection = personList;
-
-            //Columns.Add("Name", typeof(string));
-            Columns.Add("Player", typeof(Roster2));
-
-            foreach (Roster2 person in Collection)
-            {
-                Rows.Add(person);
-                AcceptChanges();
-            }
-        }
-    }*/
 
     #endregion
 

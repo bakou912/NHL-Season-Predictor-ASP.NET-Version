@@ -138,17 +138,6 @@ namespace NHLPredictorASP
         {
             TeamCollection = new TeamCollection();
         }
-
-
-        public static void AddToPlayersMemory(Player p)
-        {
-            if (PlayersMemory == null)
-            {
-                PlayersMemory = new List<Player>();
-            }
-
-            PlayersMemory.Add(p);
-        }
         public static void ResetPlayersMemory()
         {
             PlayersMemory = new List<Player>();
@@ -157,7 +146,7 @@ namespace NHLPredictorASP
         protected void Calibrate(object sender, EventArgs e)
         {
             Player.CalibrateCalculation();
-            Response.Write(Player.Adjustment);
+            Response.Write("Adjustment: " + Player.Adjustment);
         }
     }
 }
