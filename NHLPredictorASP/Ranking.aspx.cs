@@ -58,7 +58,7 @@ namespace NHLPredictorASP
             }
 
             //Adds new players to the data table
-            for (int i = _dt.Rows.Count; i <  Default.PlayersMemory.Count; i++)
+            for (var i = _dt.Rows.Count; i <  Default.PlayersMemory.Count; i++)
             {
                 //Adding new row containing the player's expected season's info if it has sufficient information
                 if (Default.PlayersMemory[i].HasSufficientInfo)
@@ -112,9 +112,9 @@ namespace NHLPredictorASP
         {
             _dt.Rows.Clear();
 
-            if (Default.TeamCollection != null)
+            if (Default.TeamList != null)
             {
-                foreach (var team in Default.TeamCollection)
+                foreach (var team in Default.TeamList)
                 {
                     foreach(var person in team.PersonList)
                     {
@@ -138,7 +138,7 @@ namespace NHLPredictorASP
             else
             {
                 //Initializing Default.TeamsCollection
-                Default.LoadTeamsCollection();
+                Default.LoadTeamList();
                 //Callback to the method with a now initialized TeamsCollection
                 ComputeAll_Click(sender, e);
             }

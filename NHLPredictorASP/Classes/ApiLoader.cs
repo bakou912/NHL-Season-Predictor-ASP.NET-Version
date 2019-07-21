@@ -9,9 +9,9 @@ namespace NHLPredictorASP.Classes
     /// <summary>
     /// Class needed for deserialization
     /// </summary>
-    public class TeamList
+    public class TeamArrayWrapper
     {
-        public List<Team> Teams { get; set; }
+        public Team[] Teams { get; set; }
         //Default and only constructor
     }
     public static class ApiLoader
@@ -36,15 +36,15 @@ namespace NHLPredictorASP.Classes
 
             var response = RestClient.Execute(request);
 
-            var validTeamList = JsonConvert.DeserializeObject<TeamList>(response.Content)?.Teams;
+            var teams = JsonConvert.DeserializeObject<TeamArrayWrapper>(response.Content)?.Teams;
 
             //Stopping the process if the response form the RestClient was null
-            if (validTeamList == null)
+            if (teams == null)
             {
                 return null;
             }
 
-            foreach (var team in validTeamList)
+            foreach (var team in teams)
             {
                 //Skipping inactive teams
                 if (!team.Active)

@@ -43,7 +43,7 @@ namespace NHLPredictorASP.Classes
             var totalPoints = 0.0;
             var totalExpectedPoints = 0.0;
 
-            foreach (var team in new TeamCollection())
+            foreach (var team in new TeamList())
             {
                 foreach (var person in team.PersonList)
                 {
