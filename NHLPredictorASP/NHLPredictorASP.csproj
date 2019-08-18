@@ -128,7 +128,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Site.css" />
-    <Content Include="Default.aspx" />
+    <Content Include="Selection.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -182,6 +182,7 @@
     <Compile Include="Classes\CompleteTeams.cs" />
     <Compile Include="Classes\Player.cs" />
     <Compile Include="Classes\Season.cs" />
+    <Compile Include="Classes\SelectionComponents.cs" />
     <Compile Include="Ranking.aspx.cs">
       <DependentUpon>Ranking.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -189,12 +190,12 @@
     <Compile Include="Ranking.aspx.designer.cs">
       <DependentUpon>Ranking.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Default.aspx.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
+    <Compile Include="Selection.aspx.cs">
+      <DependentUpon>Selection.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Default.aspx.designer.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
+    <Compile Include="Selection.aspx.designer.cs">
+      <DependentUpon>Selection.aspx</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

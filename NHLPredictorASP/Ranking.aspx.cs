@@ -24,7 +24,7 @@ namespace NHLPredictorASP
 
             exportButton.Visible = false;
 
-            if (Default.PlayersMemory != null && Default.PlayersMemory.Count > 0)
+            if (SelectionComponents.PlayersMemory != null && SelectionComponents.PlayersMemory.Count > 0)
             {
                 //Calling the populating method
                 PopulateGrid();
@@ -52,22 +52,22 @@ namespace NHLPredictorASP
         {
             exportButton.Visible = true;
 
-            if (Default.PlayersMemory.Count != 1 && Default.PlayersMemory.Count <= _dt.Rows.Count)
+            if (SelectionComponents.PlayersMemory.Count != 1 && SelectionComponents.PlayersMemory.Count < _dt.Rows.Count)
             {
                 return;
             }
 
             //Adds new players to the data table
-            for (var i = _dt.Rows.Count; i <  Default.PlayersMemory.Count; i++)
+            for (var i = _dt.Rows.Count; i < SelectionComponents.PlayersMemory.Count; i++)
             {
                 //Adding new row containing the player's expected season's info if it has sufficient information
-                if (Default.PlayersMemory[i].HasSufficientInfo)
+                if (SelectionComponents.PlayersMemory[i].HasSufficientInfo)
                 {
-                    _dt.Rows.Add(Default.PlayersMemory[i].FullName,
-                        Default.PlayersMemory[i].ExpectedSeason.Assists,
-                        Default.PlayersMemory[i].ExpectedSeason.Goals,
-                        Default.PlayersMemory[i].ExpectedSeason.Points,
-                        Default.PlayersMemory[i].ExpectedSeason.GamesPlayed);
+                    _dt.Rows.Add(SelectionComponents.PlayersMemory[i].FullName,
+                        SelectionComponents.PlayersMemory[i].ExpectedSeason.Assists,
+                        SelectionComponents.PlayersMemory[i].ExpectedSeason.Goals,
+                        SelectionComponents.PlayersMemory[i].ExpectedSeason.Points,
+                        SelectionComponents.PlayersMemory[i].ExpectedSeason.GamesPlayed);
                 }
             }
 
@@ -112,9 +112,9 @@ namespace NHLPredictorASP
         {
             _dt.Rows.Clear();
 
-            if (Default.TeamList != null)
+            if (SelectionComponents.TeamList != null)
             {
-                foreach (var team in Default.TeamList)
+                foreach (var team in SelectionComponents.TeamList)
                 {
                     foreach(var person in team.PersonList)
                     {
@@ -138,7 +138,7 @@ namespace NHLPredictorASP
             else
             {
                 //Initializing Default.TeamsCollection
-                Default.LoadTeamList();
+                Selection.LoadTeamList();
                 //Callback to the method with a now initialized TeamsCollection
                 ComputeAll_Click(sender, e);
             }

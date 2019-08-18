@@ -10,7 +10,7 @@
 namespace NHLPredictorASP {
     
     
-    public partial class Default {
+    public partial class Selection {
         
         /// <summary>
         /// UpdatePanel1 control.

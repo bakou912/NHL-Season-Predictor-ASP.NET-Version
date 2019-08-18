@@ -1,5 +1,4 @@
-﻿<%@ Page Title="NHL Season Predictor" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="NHLPredictorASP.Default" %>
-<%@ Import Namespace="System.Data" %>
+﻿<%@ Page Title="NHL Season Predictor" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Selection.aspx.cs" Inherits="NHLPredictorASP.Selection" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 
@@ -22,7 +21,7 @@
                             <asp:DropDownList id="playersSelect" runat="server" AutoPostBack="True" OnSelectedIndexChanged="EnableComputeButton" />
                             <br/><br/>
                             <div>
-                                <asp:button Text="Compute" id="computeButton" runat="server" AutoPostBack="True" onclick="ComputePlayer"></asp:button>
+                                <asp:button Text="Compute" id="computeButton" runat="server" onclick="ComputePlayer"></asp:button>
                             </div> 
                         </div>
                         <div class="col-md-2">
