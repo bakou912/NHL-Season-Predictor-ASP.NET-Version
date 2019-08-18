@@ -52,7 +52,7 @@ namespace NHLPredictorASP
         {
             exportButton.Visible = true;
 
-            if (SelectionComponents.PlayersMemory.Count != 1 && SelectionComponents.PlayersMemory.Count < _dt.Rows.Count)
+            if (SelectionComponents.PlayersMemory.Count < _dt.Rows.Count)
             {
                 return;
             }
