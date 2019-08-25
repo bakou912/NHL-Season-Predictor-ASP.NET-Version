@@ -52,7 +52,7 @@ namespace NHLPredictorASP
         {
             exportButton.Visible = true;
 
-            if (SelectionComponents.PlayersMemory.Count < _dt.Rows.Count)
+            if (SelectionComponents.PlayersMemory.Count < 2 || SelectionComponents.PlayersMemory.Count < _dt.Rows.Count)
             {
                 return;
             }
@@ -112,20 +112,20 @@ namespace NHLPredictorASP
         {
             _dt.Rows.Clear();
 
-            if (SelectionComponents.TeamList != null)
-            {
+           // if (SelectionComponents.TeamList != null)
+            //{
                 foreach (var team in SelectionComponents.TeamList)
                 {
                     foreach(var person in team.PersonList)
                     {
-                        var player = ApiLoader.LoadPlayer(DateTime.Now.Year,person.Id);
-                        player.FullName = person.Name;
+                        var player = new Player(ApiLoader.LoadPlayer(DateTime.Now.Year, person.Id), person.Name, person.Id);
 
                         if (!player.HasSufficientInfo)
                         {
                             continue;
                         }
-                        _dt.Rows.Add(player.FullName, player.ExpectedSeason.Assists, player.ExpectedSeason.Goals, player.ExpectedSeason.Points, player.ExpectedSeason.GamesPlayed); }
+                        _dt.Rows.Add(player.FullName, player.ExpectedSeason.Assists, player.ExpectedSeason.Goals, player.ExpectedSeason.Points, player.ExpectedSeason.GamesPlayed);
+                    }
                 }
                 BindGrid();
 
@@ -134,14 +134,14 @@ namespace NHLPredictorASP
 
                 //Making the export button visible
                 exportButton.Visible = true;
-            }
-            else
-            {
+           // }
+            //else
+            //{
                 //Initializing Default.TeamsCollection
-                Selection.LoadTeamList();
+            //    Selection.LoadTeamList();
                 //Callback to the method with a now initialized TeamsCollection
-                ComputeAll_Click(sender, e);
-            }
+           //     ComputeAll_Click(sender, e);
+           // }
         }
 
         /// <summary>

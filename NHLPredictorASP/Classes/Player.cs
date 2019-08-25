@@ -44,6 +44,18 @@ namespace NHLPredictorASP.Classes
         }
 
         /// <summary>
+        /// Copy constructor
+        /// </summary>
+        /// <param name="p">Player to copy</param>
+        /// <param name="name">The wanted name for this Player</param>
+        /// <param name="id">The wanted id for this Player</param>
+        public Player(Player p, string name, string id) : this(p.SeasonList)
+        {
+            Id = id;
+            FullName = name;
+        }
+
+        /// <summary>
         /// Calculates the adjustment needed for the ExpectedSeason's stats.
         /// Predicts the last 5 seasons of all players in the league and compares
         /// them with the actual last 5 seasons.
@@ -84,17 +96,6 @@ namespace NHLPredictorASP.Classes
             }
             //Adjustment is meant to bring the expectd points of all players to the actual points scored
             Adjustment = totalPoints / totalExpectedPoints;
-        }
-        /// <summary>
-        /// Copy constructor
-        /// </summary>
-        /// <param name="p">Player to copy</param>
-        /// <param name="name">The wanted name for this Player</param>
-        /// <param name="id">The wanted id for this Player</param>
-        public Player(Player p, string name, string id) : this(p.SeasonList)
-        {
-            Id = id;
-            FullName = name;
         }
 
         /// <summary>
