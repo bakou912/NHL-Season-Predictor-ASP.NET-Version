@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace NHLPredictorASP.Classes
 {
-    #region Player class
+    #region Player class used to represent an NHL player
     public class Player : Person
     {
         //The list of seasons in this Player's career
@@ -38,7 +38,7 @@ namespace NHLPredictorASP.Classes
 
             foreach (var s in seasonsToDuplicate)
             {
-                Add(Season.duplicate(s));
+                Add(Season.Duplicate(s));
             }
             CalculateExpectedSeason();
         }
@@ -101,7 +101,7 @@ namespace NHLPredictorASP.Classes
         /// <summary>
         /// Complete player duplicator: calls the copy constructor
         /// </summary>
-        /// <param name="p">Player to duplicate</param>
+        /// <param name="p">Player to Duplicate</param>
         /// <returns>The duplication of the player passed as a parameter</returns>
         public static Player Duplicate(Player p) => new Player(p, p.FullName, p.Id);
 
@@ -158,9 +158,9 @@ namespace NHLPredictorASP.Classes
             //Determines if the player has sufficient info
             HasSufficientInfo = SeasonList.Count > 2 && ExpectedSeason.GamesPlayed >= 50;
 
-            Adjust(growthRate);
+            Adjust(growthRate <= 1.1f ? (growthRate >= 0.9f ? growthRate : 0.9f) : 1.1f);
 
-            ExpectedSeason.calculatePoints();
+            ExpectedSeason.CalculatePoints();
         }
 
         /// <summary>

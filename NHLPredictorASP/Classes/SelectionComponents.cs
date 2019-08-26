@@ -1,36 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 
 namespace NHLPredictorASP.Classes
 {
+    #region Static SelectionComponents class used to encapsulate runtime team list, person list and player memory
     public static class SelectionComponents
     {
-        private static TeamList _teamList = new TeamList();
-        private static List<Roster2> _personList = new List<Roster2>();
-        private static List<Player> _playersMemory = new List<Player>();
-
-
-        public static TeamList TeamList
+        /// <summary>
+        /// Static constructor for SelectonComponents
+        /// Initializes all components needed for the Selection and Ranking pages
+        /// </summary>
+        static SelectionComponents()
         {
-            get => _teamList;
-            set => _teamList = value;
+            TeamList = new TeamList();
+            PersonList = new List<Roster2>();
+            PlayersMemory = new List<Player>();
         }
 
-        public static List<Roster2> PersonList
-        {
-            get => _personList;
-            set => _personList = value;
-        }
+        public static TeamList TeamList { get; set; }
 
-        public static List<Player> PlayersMemory
-        {
-            get => _playersMemory;
-            set => _playersMemory = value;
-        }
+        public static List<Roster2> PersonList { get; set; }
+
+        public static List<Player> PlayersMemory { get; set; }
 
         public static int TeamIndex = 0;
         public static int PlayerIndex = 0;
     }
+    #endregion
 }

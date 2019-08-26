@@ -22,15 +22,15 @@
             Assists = assists;
             Goals = goals;
             GamesPlayed = gamesPlayed;
-            calculatePoints();
+            CalculatePoints();
         }
 
-        public static Season duplicate(Season s)
+        public static Season Duplicate(Season s)
         {
             return new Season(s.Assists, s.Goals, s.GamesPlayed);
         }
 
-        public void calculatePoints()
+        public void CalculatePoints()
         {
             Points = Assists + Goals;
         }

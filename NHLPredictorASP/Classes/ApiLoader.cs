@@ -7,7 +7,7 @@ using RestSharp;
 namespace NHLPredictorASP.Classes
 {
     /// <summary>
-    /// Class needed for deserialization
+    /// Class needed for deserialization of the team list
     /// </summary>
     public class TeamArrayWrapper
     {

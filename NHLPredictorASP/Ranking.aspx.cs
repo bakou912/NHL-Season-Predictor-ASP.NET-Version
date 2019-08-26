@@ -10,7 +10,9 @@ namespace NHLPredictorASP
 {
     public partial class Ranking : Page
     {
+        //Data table used populate the page's grid
         private DataTable _dt;
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["DataTable"] == null)
@@ -46,6 +48,16 @@ namespace NHLPredictorASP
         }
 
         /// <summary>
+        /// Adds a player to the data table _dt's row table
+        /// </summary>
+        /// <param name="player">Player to add to the data table</param>
+        private void AddPlayer(Player player)
+        {
+            _dt.Rows.Add(player.FullName, player.ExpectedSeason.Assists, player.ExpectedSeason.Goals, player.ExpectedSeason.Points, player.ExpectedSeason.GamesPlayed);
+
+        }
+
+        /// <summary>
         /// Populates and binds the grid to the player memory
         /// </summary>
         private void PopulateGrid()
@@ -63,11 +75,7 @@ namespace NHLPredictorASP
                 //Adding new row containing the player's expected season's info if it has sufficient information
                 if (SelectionComponents.PlayersMemory[i].HasSufficientInfo)
                 {
-                    _dt.Rows.Add(SelectionComponents.PlayersMemory[i].FullName,
-                        SelectionComponents.PlayersMemory[i].ExpectedSeason.Assists,
-                        SelectionComponents.PlayersMemory[i].ExpectedSeason.Goals,
-                        SelectionComponents.PlayersMemory[i].ExpectedSeason.Points,
-                        SelectionComponents.PlayersMemory[i].ExpectedSeason.GamesPlayed);
+                    AddPlayer(SelectionComponents.PlayersMemory[i]);
                 }
             }
 
@@ -120,11 +128,10 @@ namespace NHLPredictorASP
                     {
                         var player = new Player(ApiLoader.LoadPlayer(DateTime.Now.Year, person.Id), person.Name, person.Id);
 
-                        if (!player.HasSufficientInfo)
+                        if (player.HasSufficientInfo)
                         {
-                            continue;
+                            AddPlayer(player);
                         }
-                        _dt.Rows.Add(player.FullName, player.ExpectedSeason.Assists, player.ExpectedSeason.Goals, player.ExpectedSeason.Points, player.ExpectedSeason.GamesPlayed);
                     }
                 }
                 BindGrid();
@@ -134,7 +141,7 @@ namespace NHLPredictorASP
 
                 //Making the export button visible
                 exportButton.Visible = true;
-           // }
+           //}
             //else
             //{
                 //Initializing Default.TeamsCollection
