@@ -10,7 +10,7 @@ namespace NHLPredictorASP
 {
     public partial class Ranking : Page
     {
-        //Data table used populate the page's grid
+        //Data table used to populate the page's grid
         private DataTable _dt;
 
         protected void Page_Load(object sender, EventArgs e)
@@ -64,7 +64,7 @@ namespace NHLPredictorASP
         {
             exportButton.Visible = true;
 
-            if (SelectionComponents.PlayersMemory.Count < 2 || SelectionComponents.PlayersMemory.Count < _dt.Rows.Count)
+            if (SelectionComponents.PlayersMemory.Count < _dt.Rows.Count)
             {
                 return;
             }
@@ -120,35 +120,25 @@ namespace NHLPredictorASP
         {
             _dt.Rows.Clear();
 
-           // if (SelectionComponents.TeamList != null)
-            //{
-                foreach (var team in SelectionComponents.TeamList)
+            foreach (var team in SelectionComponents.TeamList)
+            {
+                foreach(var person in team.PersonList)
                 {
-                    foreach(var person in team.PersonList)
-                    {
-                        var player = new Player(ApiLoader.LoadPlayer(DateTime.Now.Year, person.Id), person.Name, person.Id);
+                    var player = new Player(ApiLoader.LoadPlayer(DateTime.Now.Year, person.Id), person.Name, person.Id);
 
-                        if (player.HasSufficientInfo)
-                        {
-                            AddPlayer(player);
-                        }
+                    if (player.HasSufficientInfo)
+                    {
+                        AddPlayer(player);
                     }
                 }
-                BindGrid();
+            }
+            BindGrid();
 
-                //Making the computeAll button invisible
-                computeAllButton.Visible = false;
+            //Making the computeAll button invisible
+            computeAllButton.Visible = false;
 
-                //Making the export button visible
-                exportButton.Visible = true;
-           //}
-            //else
-            //{
-                //Initializing Default.TeamsCollection
-            //    Selection.LoadTeamList();
-                //Callback to the method with a now initialized TeamsCollection
-           //     ComputeAll_Click(sender, e);
-           // }
+            //Making the export button visible
+            exportButton.Visible = true;
         }
 
         /// <summary>
@@ -163,7 +153,7 @@ namespace NHLPredictorASP
         }
 
         /// <summary>
-        /// Exports the ranking grid to a Word file
+        /// Exports the present ranking grid to a Word file
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -191,6 +181,5 @@ namespace NHLPredictorASP
 
         //Prevents the RenderControl method from verifying the rendering for the ranking GridView
         public override void VerifyRenderingInServerForm(Control control) {}
-        
     }
 }
