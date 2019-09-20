@@ -1,4 +1,6 @@
-﻿namespace NHLPredictorASP.Classes
+﻿using System;
+
+namespace NHLPredictorASP.Classes
 {
     #region Season Class representing the offensive production of a Player for a given year
 
@@ -33,6 +35,18 @@
         public void CalculatePoints()
         {
             Points = Assists + Goals;
+        }
+
+        public override bool Equals(Object o)
+        {
+            if (!(o is Season))
+            {
+                return false;
+            }
+
+            Season s = o as Season;
+
+            return s.Points == Points && s.Goals == Goals && s.GamesPlayed == GamesPlayed;
         }
     }
 }

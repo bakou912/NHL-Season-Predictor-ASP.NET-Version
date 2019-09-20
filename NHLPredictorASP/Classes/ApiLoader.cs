@@ -74,7 +74,6 @@ namespace NHLPredictorASP.Classes
         /// <returns>The player </returns>
         public static Player LoadPlayer(int year, string id)
         {
-
             var nullSeasonCount = 0;
             var seasonList = new List<Season>();
 
