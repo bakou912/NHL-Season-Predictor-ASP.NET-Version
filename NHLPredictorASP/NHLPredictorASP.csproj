@@ -179,6 +179,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Classes\ApiLoader.cs" />
+    <Compile Include="Classes\SeasonCalculator.cs" />
     <Compile Include="Classes\TeamComponents.cs" />
     <Compile Include="Classes\Player.cs" />
     <Compile Include="Classes\Season.cs" />

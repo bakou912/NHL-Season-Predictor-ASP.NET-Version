@@ -138,8 +138,8 @@ namespace NHLPredictorASP
 
         protected void Calibrate(object sender, EventArgs e)
         {
-            Player.CalibrateCalculation(5);
-            Response.Write("Adjustment: " + Player.Adjustment);
+            SeasonCalculator.CalibrateCalculation(5);
+            Response.Write("Adjustment: " + SeasonCalculator.Adjustment);
         }
     }
 }
