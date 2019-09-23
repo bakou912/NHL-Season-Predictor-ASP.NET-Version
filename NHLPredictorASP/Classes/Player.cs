@@ -34,7 +34,7 @@ namespace NHLPredictorASP.Classes
 
             foreach (var s in seasonsToDuplicate)
             {
-                Add(Season.Duplicate(s));
+                Add(s.Duplicate());
             }
             try
             {
@@ -76,6 +76,32 @@ namespace NHLPredictorASP.Classes
                        + "\nPoints: " + ExpectedSeason.Points
                        + "\nGames played: " + ExpectedSeason.GamesPlayed
                 : "Insufficient number of seasons or games played.";
+        }
+        public override bool Equals(Object o)
+        {
+            if (!(o is Player))
+            {
+                return false;
+            }
+
+            Player p = o as Player;
+
+            return ExpectedSeason.Equals(p.ExpectedSeason) && FullName.Equals(p.FullName) && Id == p.Id && GetHashCode() == p.GetHashCode();
+        }
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                // Choose large primes to avoid hashing collisions
+                const int HashingBase = (int)2166136261;
+                const int HashingMultiplier = 16777619;
+
+                int hash = HashingBase;
+                hash = (hash * HashingMultiplier) ^ (!(ExpectedSeason is null) ? ExpectedSeason.GetHashCode() : 0);
+                hash = (hash * HashingMultiplier) ^ (!(FullName is null) ? FullName.GetHashCode() : 0);
+                hash = (hash * HashingMultiplier) ^ (!(Id is null) ? Id.GetHashCode() : 0);
+                return hash;
+            }
         }
     }
     #endregion

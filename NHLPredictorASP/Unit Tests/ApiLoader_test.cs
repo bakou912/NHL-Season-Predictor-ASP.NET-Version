@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
-using System;
+using NHLPredictorASP.Classes;
 
-namespace NHLPredictorASP.Classes
+namespace NHLPredictorASP.Unit_Tests
 {
     [TestFixture]
     public class ApiLoader_Test
