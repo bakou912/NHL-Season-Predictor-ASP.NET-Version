@@ -63,7 +63,7 @@ namespace NHLPredictorASP
                     var player = new Player(ApiLoader.LoadPlayer(DateTime.Now.Year, person.Id), person.Name, person.Id);
 
                     //Adding player to the already calculated players
-                    SelectionComponents.PlayersMemory.Add(Player.Duplicate(player));
+                    SelectionComponents.PlayersMemory.Add(player.Duplicate());
                     //Session["PlayersMemory"] = SelectionComponents.PlayersMemory;
  
                     //Printing the player's expected season to the result textbox

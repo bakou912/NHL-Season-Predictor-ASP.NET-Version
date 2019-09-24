@@ -205,6 +205,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Classes\ApiLoader.cs" />
+    <Compile Include="Unit Tests\Player_test.cs" />
     <Compile Include="Unit Tests\Season_test.cs" />
     <Compile Include="Unit Tests\ApiLoader_test.cs" />
     <Compile Include="Classes\SeasonCalculator.cs" />

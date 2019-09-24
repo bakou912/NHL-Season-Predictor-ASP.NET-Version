@@ -64,7 +64,7 @@ namespace NHLPredictorASP.Classes
         /// </summary>
         /// <param name="p">Player to Duplicate</param>
         /// <returns>The duplication of the player passed as a parameter</returns>
-        public static Player Duplicate(Player p) => new Player(p, p.FullName, p.Id);
+        public Player Duplicate() => new Player(this, FullName, Id);
 
         /// <returns>String representation of the Player</returns>
         public override string ToString()

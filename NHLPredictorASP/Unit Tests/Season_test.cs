@@ -35,13 +35,15 @@ namespace NHLPredictorASP.Unit_Tests
             Assert.IsFalse(seasonFalse.Equals(testSeason));
         }
 
-        //Duplicate method should consider copiedSeason equal to testSeason
+        //Duplicate method should consider copiedSeason equal to testSeason but they should not be the same object
         [Test]
         public void TestDuplicate()
         {
             Season toCopy = new Season(15,15,15);
             Season copiedSeason = toCopy.Duplicate();
             Assert.AreEqual(copiedSeason, testSeason);
+            Assert.AreNotSame(copiedSeason, testSeason);
+
         }
 
         //Duplicate should create a deep copy of a season compared
