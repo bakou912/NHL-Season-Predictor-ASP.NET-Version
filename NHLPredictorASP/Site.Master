@@ -12,9 +12,9 @@
         <%: Scripts.Render("~/bundles/modernizr") %>
     </asp:PlaceHolder>
 
-    <webopt:bundlereference runat="server" path="~/Content/css" />
+    <webopt:bundleReference runat="server" Path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-    <link rel="Stylesheet" href="Content/rankingStyle.css" type="text/css" />
+    <link rel="Stylesheet" href="~/Content/rankingStyle.css" type="text/css" />
 
 </head>
 <body>
@@ -48,7 +48,7 @@
                         <span class="icon-bar"></span>
                     </button>
                     <a style="font-size: 125%;" class="navbar-brand" runat="server" href="~/Selection">NHL Season Predictor</a>
-                    </div>
+                </div>
                 <div style="font-size: 150%;" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li><a runat="server" href="~/Ranking">Ranking</a></li>

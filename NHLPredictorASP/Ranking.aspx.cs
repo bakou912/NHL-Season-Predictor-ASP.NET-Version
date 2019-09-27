@@ -18,13 +18,12 @@ namespace NHLPredictorASP
             if (Session["DataTable"] == null)
             {
                 InitDataTable();
+                exportButton.Visible = false;
             }
             else
             {
                 _dt = Session["DataTable"] as DataTable;
             }
-
-            exportButton.Visible = false;
 
             if (SelectionComponents.PlayersMemory != null && SelectionComponents.PlayersMemory.Count > 0)
             {
@@ -54,7 +53,6 @@ namespace NHLPredictorASP
         private void AddPlayer(Player player)
         {
             _dt.Rows.Add(player.FullName, player.ExpectedSeason.Assists, player.ExpectedSeason.Goals, player.ExpectedSeason.Points, player.ExpectedSeason.GamesPlayed);
-
         }
 
         /// <summary>
