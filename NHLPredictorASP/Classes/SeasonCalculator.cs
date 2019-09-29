@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace NHLPredictorASP.Classes
 {
@@ -39,7 +38,7 @@ namespace NHLPredictorASP.Classes
 
                     for (var i = 0; i < nbSeasons; i++)
                     {
-                        var index = completeSeasonList.FindIndex(s => s.SeasonYear == $"{year}{year + 1}");
+                        var index = completeSeasonList.FindIndex(s => s.SeasonYears == $"{year}{year + 1}");
                         if (index < 0)
                         {
                             continue;
@@ -76,12 +75,11 @@ namespace NHLPredictorASP.Classes
             var growthRate = 1.0;//Growth rate used to adjust the prediction according to the player's production's improvement
             var previousValid = false;
             var weightsList = new List<double>();
-            var i = 0;
             //var averageGames = player.SeasonList.Count == 0 ? 0 : (int)player.SeasonList.Average(s => s.GamesPlayed);
 
             player.SeasonList.Reverse();
 
-            for (i = 0; i < player.SeasonList.Count; i++)
+            for (var i = 0; i < player.SeasonList.Count; i++)
             {
                 if (player.SeasonList.Count > 5)//If there are enough seasons to eliminate the ones below games played average
                 {
@@ -109,7 +107,7 @@ namespace NHLPredictorASP.Classes
             //Total of all absolute weights used to calculate relative weight of each season in next step
             total = weightsList.Sum();
 
-            for (i = 0; i < weightsList.Count; i++)
+            for (var i = 0; i < weightsList.Count; i++)
             {
                 ApplySeasonWeight(player, weightsList, i, total);
             }

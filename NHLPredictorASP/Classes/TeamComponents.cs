@@ -4,7 +4,7 @@ using System.Linq;
 namespace NHLPredictorASP.Classes
 {
     #region Objects needed for deserialization of the JSON teams/rosters coming from the NHL's API
-    public class Roster2
+    public class StatsRoster
     {
         public Person Person { get; set; }
         public Position Position { get; set; }
@@ -17,7 +17,7 @@ namespace NHLPredictorASP.Classes
 
     public class RosterList
     {
-        public List<Roster2> Roster { get; set; }
+        public List<StatsRoster> Roster { get; set; }
     }
     public class Team
     {
@@ -27,7 +27,7 @@ namespace NHLPredictorASP.Classes
         public string Name { get; set; }
         public RosterList Roster { get; set; }
 
-        public List<Roster2> PersonList
+        public List<StatsRoster> PersonList
         {
             get => Roster.Roster;
             set => Roster.Roster = value;

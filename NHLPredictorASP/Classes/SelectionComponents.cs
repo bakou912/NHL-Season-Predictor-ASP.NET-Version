@@ -12,13 +12,13 @@ namespace NHLPredictorASP.Classes
         static SelectionComponents()
         {
             TeamList = new TeamList();
-            PersonList = new List<Roster2>();
+            PersonList = new List<StatsRoster>();
             PlayersMemory = new List<Player>();
         }
 
         public static TeamList TeamList { get; set; }
 
-        public static List<Roster2> PersonList { get; set; }
+        public static List<StatsRoster> PersonList { get; set; }
 
         public static List<Player> PlayersMemory { get; set; }
 

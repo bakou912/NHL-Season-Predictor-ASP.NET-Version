@@ -10,7 +10,7 @@ namespace NHLPredictorASP.Classes
         public int Goals { get; set; }
         public int Points { get; set; }
         public int GamesPlayed { get; set; }
-        public string SeasonYear { get; set; }
+        public string SeasonYears { get; private set; }
 
         public Season()
         {
@@ -29,19 +29,12 @@ namespace NHLPredictorASP.Classes
         }
         public Season(Split split) : this(split.Stat.Assists, split.Stat.Goals, split.Stat.Games)
         {
-            SeasonYear = split.Season;
+            SeasonYears = split.Season;
         }
 
         public void CalculatePoints()
         {
             Points = Assists + Goals;
-        }
-
-        public void Merge(Season season)
-        {
-            Assists += season.Assists;
-            Goals += season.Goals;
-            GamesPlayed += season.GamesPlayed;
         }
 
         public override bool Equals(object obj)

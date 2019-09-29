@@ -9,7 +9,7 @@ namespace NHLPredictorASP.Classes
         //The list of seasons in this Player's career
         public List<Season> SeasonList { get; }
         //The expected season for this Player's next year
-        public Season ExpectedSeason { get; }
+        public Season ExpectedSeason { get; private set; }
         //Represents the sufficiency of this Player's stats in his career
         public bool HasSufficientInfo { get; set; }
 
@@ -91,7 +91,7 @@ namespace NHLPredictorASP.Classes
     #endregion
 
     #region Objects needed for deserialization of the JSON persons/stats coming from the NHL's API
-    public class Stat2
+    public class SeasonStats
     {
         public int Assists { get; set; }
         public int Goals { get; set; }
@@ -105,9 +105,10 @@ namespace NHLPredictorASP.Classes
     }
     public class Split
     {
-        public Stat2 Stat { get; set; }
-        public string Season { get; set; }
+        public SeasonStats Stat { get; set; }
         public League League { get; set; }
+
+        public string Season { get; set; }
     }
     public class Stat
     {
