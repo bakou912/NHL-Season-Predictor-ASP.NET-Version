@@ -58,12 +58,10 @@ namespace NHLPredictorASP.Classes
 
                 //Deserializing the team's roster (collection of Roster2 objects)
                 team.PersonList = new List<StatsRoster>(team.PersonList.OrderBy(r => r.Person.FullName));
+                team.PersonList.ForEach(p => p.Person.TeamAbv = team.Abbreviation);
 
                 //Removing all goaltenders from the roster
-                while (team.PersonList.Any(p => p.Code.Equals("G")))
-                {
-                    team.PersonList.Remove(team.PersonList.First(p => p.Code.Equals("G")));
-                }
+                team.PersonList.RemoveAll(p => p.Code.Equals("G"));
 
                 teamList.Add(team);
             }

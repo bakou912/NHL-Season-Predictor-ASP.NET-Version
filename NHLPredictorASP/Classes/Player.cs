@@ -44,10 +44,11 @@ namespace NHLPredictorASP.Classes
         /// <param name="p">Player to copy</param>
         /// <param name="name">The wanted name for this Player</param>
         /// <param name="id">The wanted id for this Player</param>
-        public Player(Player p, string name, string id) : this(p.SeasonList)
+        public Player(Player p, string name, string id, string teamAbv) : this(p.SeasonList)
         {
             Id = id;
             FullName = name;
+            TeamAbv = teamAbv;
         }
 
         /// <returns>String representation of the Player</returns>
@@ -127,6 +128,7 @@ namespace NHLPredictorASP.Classes
     {
         public string Id { get; set; }
         public string FullName { get; set; }
+        public string TeamAbv { get; set; }
         public bool Active { get; set; }
 
         public Person()

@@ -54,13 +54,13 @@ namespace NHLPredictorASP
             {
                 SelectionComponents.PlayerIndex = playersSelect.SelectedIndex;
                 computeButton.Enabled = false;
-                var person = SelectionComponents.PersonList[playersSelect.SelectedIndex] as Roster2;
+                var person = SelectionComponents.PersonList[playersSelect.SelectedIndex] as StatsRoster;
 
                 //Check if the player hasn't already been loaded (avoiding to call the api again)
                 if (!SelectionComponents.PlayersMemory.Any(p => p.Id.Equals(SelectionComponents.PersonList[playersSelect.SelectedIndex].Id)))
                 {
                     //Fetching the player through the player loader
-                    var player = new Player(ApiLoader.LoadPlayer(DateTime.Now.Year, person.Id), person.Name, person.Id);
+                    var player = new Player(ApiLoader.LoadPlayer(DateTime.Now.Year, person.Id), person.Name, person.Id, person.Person.TeamAbv);
                     SeasonCalculator.CalculateExpectedSeason(player);
 
                     //Adding player to the already calculated players
