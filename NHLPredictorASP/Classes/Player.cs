@@ -34,17 +34,8 @@ namespace NHLPredictorASP.Classes
 
             foreach (var s in seasonsToDuplicate)
             {
-                Add(s.Duplicate());
+                Add(s);
             }
-            try
-            {
-                SeasonCalculator.CalculateExpectedSeason(this);
-            }
-            catch (Exception)
-            {
-                HasSufficientInfo = false;
-            }
-            
         }
 
         /// <summary>
@@ -58,13 +49,6 @@ namespace NHLPredictorASP.Classes
             Id = id;
             FullName = name;
         }
-
-        /// <summary>
-        /// Complete player duplicator: calls the copy constructor
-        /// </summary>
-        /// <param name="p">Player to Duplicate</param>
-        /// <returns>The duplication of the player passed as a parameter</returns>
-        public Player Duplicate() => new Player(this, FullName, Id);
 
         /// <returns>String representation of the Player</returns>
         public override string ToString()
@@ -112,11 +96,18 @@ namespace NHLPredictorASP.Classes
         public int Assists { get; set; }
         public int Goals { get; set; }
         public int Games { get; set; }
+        public Season Season => new Season(Assists, Goals, Games);
+    }
+
+    public class League
+    {
+        public int Id { get; set; }
     }
     public class Split
     {
         public Stat2 Stat { get; set; }
-        //public string Season { get => season; set => season = value; }
+        public string Season { get; set; }
+        public League League { get; set; }
     }
     public class Stat
     {
@@ -125,10 +116,6 @@ namespace NHLPredictorASP.Classes
     public class StatsList
     {
         public List<Stat> Stats { get; set; }
-        private int Assists => Stats[0].Splits[0].Stat.Assists;
-        private int Goals => Stats[0].Splits[0].Stat.Goals;
-        private int Games => Stats[0].Splits[0].Stat.Games;
-        public Season Season => new Season(Assists, Goals, Games);
     }
 
     public class Position

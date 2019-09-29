@@ -123,6 +123,7 @@ namespace NHLPredictorASP
                 foreach(var person in team.PersonList)
                 {
                     var player = new Player(ApiLoader.LoadPlayer(DateTime.Now.Year, person.Id), person.Name, person.Id);
+                    SeasonCalculator.CalculateExpectedSeason(player);
 
                     if (player.HasSufficientInfo)
                     {

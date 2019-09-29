@@ -51,7 +51,7 @@ namespace NHLPredictorASP.Unit_Tests
         [Test]
         public void TestEquals()
         {
-            Player playerTrue = referencePlayer.Duplicate();
+            Player playerTrue = referencePlayer;
             Assert.IsTrue(playerTrue.Equals(referencePlayer));
 
             List<Season> falseCareer = new List<Season>();
@@ -60,16 +60,6 @@ namespace NHLPredictorASP.Unit_Tests
             falseCareer.Add(new Season(13, 16, 52));
             Player playerFalse = new Player(falseCareer);
             Assert.IsFalse(playerFalse.Equals(referencePlayer));
-        }
-
-        //Duplicate method should consider copiedPlayer equal to testPlayer but they should not be the same object
-        [Test]
-        public void TestDuplicate()
-        {
-            Player toCopy = new Player(career);
-            Player copiedPlayer = toCopy.Duplicate();
-            Assert.AreEqual(copiedPlayer, toCopy);
-            Assert.AreNotSame(copiedPlayer, toCopy);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace NHLPredictorASP.Classes
 {
@@ -8,7 +9,7 @@ namespace NHLPredictorASP.Classes
     {
 
         //Adjustment calculated with the CalibrateCalculation method.
-        public static double Adjustment { get; private set; } = 1.0558325638658;//Before growth rate:1.00806340590399f;
+        public static double Adjustment { get; private set; } = 1.0152455599855;
 
         /// <summary>
         /// Calculates the adjustment needed for the ExpectedSeason's stats.
@@ -17,7 +18,7 @@ namespace NHLPredictorASP.Classes
         /// <param name="nbSeason">Integer representing the number of seasons to calculate for the calibration</param>
         /// </summary>
         //TODO: optimize method, time complexity is too high
-        public static void CalibrateCalculation(int nbSeasons)
+        public  static void CalibrateCalculation(int nbSeasons)
         {
             //All actual points scored by any player in the last {nbSeasons} seasons
             var totalPoints = 0.0;
@@ -31,21 +32,34 @@ namespace NHLPredictorASP.Classes
                 {
                     //Setting the starting year to the last completed season
                     var year = DateTime.Now.Year;
+
+                    var initPlayer = ApiLoader.LoadPlayer(year--, person.Id);
+                    CalculateExpectedSeason(initPlayer);
+                    var completeSeasonList = initPlayer.SeasonList;
+
                     for (var i = 0; i < nbSeasons; i++)
                     {
-                        var player = ApiLoader.LoadPlayer(year - 1, person.Id);
-                        var actualSeason = ApiLoader.GetSeason(year, person.Id);
+                        var index = completeSeasonList.FindIndex(s => s.SeasonYear == $"{year}{year + 1}");
+                        if (index < 0)
+                        {
+                            continue;
+                        }
 
-                        if (!player.HasSufficientInfo || actualSeason == null)
+                        var player = ApiLoader.LoadPlayer(year, person.Id);
+                        CalculateExpectedSeason(player);
+                        if (!player.HasSufficientInfo)
                         {
                             break;
                         }
+
+                        var actualSeason = completeSeasonList[index];
 
                         year--;
 
                         //Incrementing points totals
                         totalPoints += actualSeason.Points;
                         totalExpectedPoints += player.ExpectedSeason.Points;
+                        completeSeasonList.RemoveAt(index);
                     }
                 }
             }
@@ -63,18 +77,20 @@ namespace NHLPredictorASP.Classes
             var previousValid = false;
             var weightsList = new List<double>();
             var i = 0;
-            var averageGames = player.SeasonList.Count == 0 ? 0 : (int)player.SeasonList.Average(s => s.GamesPlayed);
+            //var averageGames = player.SeasonList.Count == 0 ? 0 : (int)player.SeasonList.Average(s => s.GamesPlayed);
+
+            player.SeasonList.Reverse();
 
             for (i = 0; i < player.SeasonList.Count; i++)
             {
                 if (player.SeasonList.Count > 5)//If there are enough seasons to eliminate the ones below games played average
                 {
-                    if (player.SeasonList[i].GamesPlayed >= averageGames)//If above games played average
+                    if (player.SeasonList[i].GamesPlayed >= 50)//If above games played average
                     {
                         AddWeight(player, weightsList, i);
                         if (previousValid)
                         {
-                            growthRate *= (double)player.SeasonList[i].Points / player.SeasonList[i - 1].Points;
+                            weightsList[weightsList.Count - 1] *= (double)player.SeasonList[i].Points / player.SeasonList[i - 1].Points;
                         }
                         previousValid = true;
                     }
