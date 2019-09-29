@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RestSharp;
 
@@ -68,70 +69,54 @@ namespace NHLPredictorASP.Classes
         }
 
         /// <summary>
-        /// Fetching and deserializing player object corresponding to player ID
+        /// Fetching player object by deserializing StatsList of all seasons in career
         /// </summary>
-        /// <param name="id">Player ID in the NHL's database</param>
-        /// <returns>The player </returns>
+        /// <param name="year">year to estimate</param>
+        /// <param name="id">player's ID</param>
+        /// <returns>Player built from NHL's stats api</returns>
         public static Player LoadPlayer(int year, string id)
         {
-            var nullSeasonCount = 0;
+            var seasonYears = $"{year - 1}{year}";
             var seasonList = new List<Season>();
 
-            while (nullSeasonCount <= 4)
-            {
-                var newSeason = GetSeason(year, id);
-
-                if (newSeason != null)
-                {
-                    /*If the season is valid - not null - the null season counter is reset, because
-                     the season reading process should only be stopped when there are more than 4 consecutive inactive seasons*/
-                    nullSeasonCount = 0;
-
-                    //Adding the season to the season list
-                    seasonList.Add(newSeason);
-                }
-                else
-                {
-                    //When the response is invalid, the null counter is incremented
-                    nullSeasonCount++;
-                }
-
-                //Decrementing the season year for the next iteration
-                year--;
-            }
-            return new Player(seasonList);
-        }
-
-        /// <summary>
-        /// Fetches the season of a player for a specified year 
-        /// </summary>
-        /// <param name="year">Season year</param>
-        /// <param name="id">Player ID in the NHL's database</param>
-        /// <returns>The season for the year for a player with the specified ID</returns>
-        public static Season GetSeason(int year, string id)
-        {
-            //Base URL for the wanted player
-            var baseResource = "people/" + id + "/stats?stats=statsSingleSeason&season=" + $"{year - 1}{year}";
+            //Base URL for the wanted player's season by season stats
+            var baseResource = "people/" + id + "/stats?stats=yearByYear";
 
             //Initializing the Rest request
             var restRequest = new RestRequest()
             {
                 Method = Method.GET,
-                //Setting the base URL for the request
                 Resource = baseResource
             };
 
-            //Storing rest request's execution response
             var response = RestClient.Execute(restRequest);
 
-            try
+            var statsList = JsonConvert.DeserializeObject<StatsList>(response.Content);
+            string lastYear = "";
+            foreach (var split in statsList.Stats[0].Splits)
             {
-                return JsonConvert.DeserializeObject<StatsList>(response.Content).Season;
+                if (split.League.Id != 133)
+                {
+                    continue;
+                }
+
+                var newSeason = new Season(split);
+                if (newSeason.SeasonYear.CompareTo(seasonYears) > 0)
+                {
+                    break;
+                }
+
+                if (lastYear == newSeason.SeasonYear)
+                {
+                    newSeason.Merge(seasonList[seasonList.Count - 1]);
+                    seasonList.RemoveAt(seasonList.Count - 1);
+                }
+
+                seasonList.Add(newSeason);
+                lastYear = newSeason.SeasonYear;
             }
-            catch (Exception)
-            {
-                return null;
-            }
+
+            return new Player(seasonList);
         }
     }
 }

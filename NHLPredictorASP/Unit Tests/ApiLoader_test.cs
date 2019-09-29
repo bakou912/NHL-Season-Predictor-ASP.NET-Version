@@ -29,22 +29,5 @@ namespace NHLPredictorASP.Unit_Tests
         {
             Assert.AreEqual(NB_SEASONS, ApiLoader.LoadPlayer(2019, ovechkinId).SeasonList.Count);
         }
-
-        //GetSeason should return the right season stats for 2018/2019
-        [Test]
-        public void TestGetSeason()
-        {
-            Season testSeason = ApiLoader.GetSeason(2019, ovechkinId);
-            Season referenceSeason = new Season(38, 51, 81);
-            Assert.AreEqual(referenceSeason, testSeason);
-        }
-
-        //GetSeason should return the right season stats for 1989/1990 (invalid season)RA
-        [Test]
-        public void TestGetSeasonInvalid()
-        {
-            Season season = ApiLoader.GetSeason(1990, ovechkinId);
-            Assert.That(season is null);
-        }
     }
 }

@@ -10,6 +10,7 @@ namespace NHLPredictorASP.Classes
         public int Goals { get; set; }
         public int Points { get; set; }
         public int GamesPlayed { get; set; }
+        public string SeasonYear { get; set; }
 
         public Season()
         {
@@ -26,10 +27,9 @@ namespace NHLPredictorASP.Classes
             GamesPlayed = gamesPlayed;
             CalculatePoints();
         }
-
-        public Season Duplicate()
+        public Season(Split split) : this(split.Stat.Assists, split.Stat.Goals, split.Stat.Games)
         {
-            return new Season(Assists, Goals, GamesPlayed);
+            SeasonYear = split.Season;
         }
 
         public void CalculatePoints()
@@ -37,17 +37,25 @@ namespace NHLPredictorASP.Classes
             Points = Assists + Goals;
         }
 
-        public override bool Equals(Object o)
+        public void Merge(Season season)
         {
-            if (!(o is Season))
+            Assists += season.Assists;
+            Goals += season.Goals;
+            GamesPlayed += season.GamesPlayed;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Season))
             {
                 return false;
             }
 
-            Season s = o as Season;
+            Season s = obj as Season;
 
             return s.Points == Points && s.Goals == Goals && s.GamesPlayed == GamesPlayed && GetHashCode() == s.GetHashCode();
         }
+
 
         public override int GetHashCode()
         {

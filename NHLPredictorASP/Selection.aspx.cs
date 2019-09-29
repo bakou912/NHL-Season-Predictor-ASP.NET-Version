@@ -61,10 +61,10 @@ namespace NHLPredictorASP
                 {
                     //Fetching the player through the player loader
                     var player = new Player(ApiLoader.LoadPlayer(DateTime.Now.Year, person.Id), person.Name, person.Id);
+                    SeasonCalculator.CalculateExpectedSeason(player);
 
                     //Adding player to the already calculated players
-                    SelectionComponents.PlayersMemory.Add(player.Duplicate());
-                    //Session["PlayersMemory"] = SelectionComponents.PlayersMemory;
+                    SelectionComponents.PlayersMemory.Add(player);
  
                     //Printing the player's expected season to the result textbox
                     result.Text = player.ToString();
