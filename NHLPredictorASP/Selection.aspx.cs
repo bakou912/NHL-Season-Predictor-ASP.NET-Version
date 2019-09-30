@@ -25,9 +25,6 @@ namespace NHLPredictorASP
         {
             if(!IsPostBack)//Prevents from resetting the components at every postback
             {
-                //TeamList = Session["TeamList"] == null ? new TeamList() : Session["TeamList"] as TeamList;
-                //PlayersMemory = Session["PlayersMemory"] == null ? new List<Player>() : Session["PlayersMemory"] as List<Player>;
-
                 teamsSelect.SelectedIndex = SelectionComponents.TeamIndex;
                 teamsSelect.DataSource = SelectionComponents.TeamList;
                 teamsSelect.DataBind();

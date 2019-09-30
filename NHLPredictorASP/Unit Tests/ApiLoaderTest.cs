@@ -4,7 +4,7 @@ using NHLPredictorASP.Classes;
 namespace NHLPredictorASP.Unit_Tests
 {
     [TestFixture]
-    public class ApiLoader_Test
+    public class ApiLoaderTest
     {
 
         const int NB_TEAMS = 31, NB_SEASONS = 12;

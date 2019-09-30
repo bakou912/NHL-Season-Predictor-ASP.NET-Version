@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace NHLPredictorASP.Unit_Tests
 {
-    public class Player_test
+    public class PlayerTest
     {
         Player referencePlayer;
         List<Season> career;
@@ -12,10 +12,12 @@ namespace NHLPredictorASP.Unit_Tests
         [OneTimeSetUp]
         public void Before()
         {
-            career = new List<Season>();
-            career.Add(new Season(13, 45, 52));
-            career.Add(new Season(73, 45, 52));
-            career.Add(new Season(13, 16, 52));
+            career = new List<Season>
+            {
+                new Season(13, 45, 52),
+                new Season(73, 45, 52),
+                new Season(13, 16, 52)
+            };
             referencePlayer = new Player(career);
         }
 
@@ -27,9 +29,11 @@ namespace NHLPredictorASP.Unit_Tests
         [Test]
         public void TestHasSufficientInfo()
         {
-            List<Season> insufficientQuantity = new List<Season>();
-            insufficientQuantity.Add(new Season(0, 0, 50));
-            insufficientQuantity.Add(new Season(0, 0, 50));
+            List<Season> insufficientQuantity = new List<Season>
+            {
+                new Season(0, 0, 50),
+                new Season(0, 0, 50)
+            };
             Player testPlayer = new Player(insufficientQuantity);
             Assert.IsFalse(testPlayer.HasSufficientInfo);
 
@@ -38,10 +42,12 @@ namespace NHLPredictorASP.Unit_Tests
             testPlayer = new Player(sufficientSeason);
             Assert.IsTrue(testPlayer.HasSufficientInfo);
 
-            List<Season> insufficientGameAverage = new List<Season>();
-            insufficientGameAverage.Add(new Season(0, 0, 50));
-            insufficientGameAverage.Add(new Season(0, 0, 30));
-            insufficientGameAverage.Add(new Season(0, 0, 30));
+            List<Season> insufficientGameAverage = new List<Season>
+            {
+                new Season(0, 0, 50),
+                new Season(0, 0, 30),
+                new Season(0, 0, 30)
+            };
             testPlayer = new Player(insufficientGameAverage);
             Assert.IsFalse(testPlayer.HasSufficientInfo);
         }
@@ -54,10 +60,12 @@ namespace NHLPredictorASP.Unit_Tests
             Player playerTrue = referencePlayer;
             Assert.IsTrue(playerTrue.Equals(referencePlayer));
 
-            List<Season> falseCareer = new List<Season>();
-            falseCareer.Add(new Season(13, 45, 52));
-            falseCareer.Add(new Season(73, 45, 51));
-            falseCareer.Add(new Season(13, 16, 52));
+            List<Season> falseCareer = new List<Season>
+            {
+                new Season(13, 45, 52),
+                new Season(73, 45, 51),
+                new Season(13, 16, 52)
+            };
             Player playerFalse = new Player(falseCareer);
             Assert.IsFalse(playerFalse.Equals(referencePlayer));
         }

@@ -16,7 +16,6 @@ namespace NHLPredictorASP.Classes
         /// them with the actual last nbSeasons seasons.
         /// <param name="nbSeason">Integer representing the number of seasons to calculate for the calibration</param>
         /// </summary>
-        //TODO: optimize method, time complexity is too high
         public  static void CalibrateCalculation(int nbSeasons)
         {
             //All actual points scored by any player in the last {nbSeasons} seasons
@@ -71,11 +70,9 @@ namespace NHLPredictorASP.Classes
         /// </summary>
         public static void CalculateExpectedSeason(Player player)
         {
-            var total = 0.0;
             var growthRate = 1.0;//Growth rate used to adjust the prediction according to the player's production's improvement
             var previousValid = false;
             var weightsList = new List<double>();
-            //var averageGames = player.SeasonList.Count == 0 ? 0 : (int)player.SeasonList.Average(s => s.GamesPlayed);
 
             player.SeasonList.Reverse();
 
@@ -83,7 +80,7 @@ namespace NHLPredictorASP.Classes
             {
                 if (player.SeasonList.Count > 5)//If there are enough seasons to eliminate the ones below games played average
                 {
-                    if (player.SeasonList[i].GamesPlayed >= 50)//If above games played average
+                    if (player.SeasonList[i].GamesPlayed >= 50)//If above respectable number of games played
                     {
                         AddWeight(player, weightsList, i);
                         if (previousValid)
@@ -105,7 +102,7 @@ namespace NHLPredictorASP.Classes
                 }
             }
             //Total of all absolute weights used to calculate relative weight of each season in next step
-            total = weightsList.Sum();
+            var total = weightsList.Sum();
 
             for (var i = 0; i < weightsList.Count; i++)
             {

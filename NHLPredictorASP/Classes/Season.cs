@@ -59,9 +59,9 @@ namespace NHLPredictorASP.Classes
                 const int HashingMultiplier = 16777619;
 
                 int hash = HashingBase;
-                hash = (hash * HashingMultiplier) ^ (!Object.ReferenceEquals(null, Assists) ? Assists.GetHashCode() : 0);
-                hash = (hash * HashingMultiplier) ^ (!Object.ReferenceEquals(null, Goals) ? Goals.GetHashCode() : 0);
-                hash = (hash * HashingMultiplier) ^ (!Object.ReferenceEquals(null, GamesPlayed) ? GamesPlayed.GetHashCode() : 0);
+                hash = (hash * HashingMultiplier) ^ (Assists != 0 ? Assists.GetHashCode() : 0);
+                hash = (hash * HashingMultiplier) ^ (Goals != 0 ? Goals.GetHashCode() : 0);
+                hash = (hash * HashingMultiplier) ^ (GamesPlayed != 0 ? GamesPlayed.GetHashCode() : 0);
                 return hash;
             }
         }

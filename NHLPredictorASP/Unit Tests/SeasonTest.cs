@@ -4,7 +4,7 @@ using NHLPredictorASP.Classes;
 namespace NHLPredictorASP.Unit_Tests
 {
     [TestFixture]
-    public class Season_test
+    public class SeasonTest
     {
         readonly Season testSeason = new Season(15, 15, 15);
         [OneTimeSetUp]
