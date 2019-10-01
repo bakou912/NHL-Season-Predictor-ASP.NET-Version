@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using NHLPredictorASP.Utility;
+using System.Collections.Generic;
 using System.Linq;
 
-namespace NHLPredictorASP.Classes
+namespace NHLPredictorASP.Deserialization
 {
     #region Objects needed for deserialization of the JSON teams/rosters coming from the NHL's API
+
     public class StatsRoster
     {
         public Person Person { get; set; }
@@ -19,6 +21,7 @@ namespace NHLPredictorASP.Classes
     {
         public List<StatsRoster> Roster { get; set; }
     }
+
     public class Team
     {
         public string Id { get; set; }
@@ -36,9 +39,10 @@ namespace NHLPredictorASP.Classes
         public override string ToString() => $"{Name} ({Abbreviation})";
     }
 
-    #endregion
+    #endregion Objects needed for deserialization of the JSON teams/rosters coming from the NHL's API
 
     #region TeamList class used to contain all teams fetched from the API and use as a wrapper
+
     public class TeamList : List<Team>
     {
         public TeamList()
@@ -48,7 +52,7 @@ namespace NHLPredictorASP.Classes
                 Add(t);
             }
         }
-
     }
-    #endregion
+
+    #endregion TeamList class used to contain all teams fetched from the API and use as a wrapper
 }

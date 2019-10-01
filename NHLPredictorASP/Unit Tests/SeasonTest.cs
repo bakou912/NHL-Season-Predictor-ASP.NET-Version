@@ -1,19 +1,20 @@
-﻿using NUnit.Framework;
-using NHLPredictorASP.Classes;
+﻿using NHLPredictorASP.Classes;
+using NHLPredictorASP.Entities;
+using NUnit.Framework;
 
 namespace NHLPredictorASP.Unit_Tests
 {
     [TestFixture]
     public class SeasonTest
     {
-        readonly Season testSeason = new Season(15, 15, 15);
+        private readonly Season testSeason = new Season(15, 15, 15);
+
         [OneTimeSetUp]
         public void Before()
         {
-           
         }
 
-        //CalculatePoints should add the points correctly 
+        //CalculatePoints should add the points correctly
         //(15 assists + 15 goals = 30 points)
         [Test]
         public void TestCalculatePoints()
@@ -26,7 +27,7 @@ namespace NHLPredictorASP.Unit_Tests
         [Test]
         public void TestEquals()
         {
-            Season seasonFalse = new Season(1,2,3);
+            Season seasonFalse = new Season(1, 2, 3);
             Season seasonTrue = new Season(15, 15, 15);
 
             Assert.IsTrue(seasonTrue.Equals(testSeason));

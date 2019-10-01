@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using NHLPredictorASP.Deserialization;
+using NHLPredictorASP.Entities;
 using RestSharp;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace NHLPredictorASP.Classes
+namespace NHLPredictorASP.Utility
 {
     /// <summary>
     /// Class needed for deserialization of the team list
@@ -13,15 +15,16 @@ namespace NHLPredictorASP.Classes
         public List<Team> Teams { get; set; }
         //Default and only constructor
     }
+
     public static class ApiLoader
     {
         /// <summary>The base UR for the NHL's apiL</summary>
-        private static readonly string BaseUrl = "https://statsapi.web.nhl.com/api/v1";
+        private const string BaseUrl = "https://statsapi.web.nhl.com/api/v1";
 
         /// <summary>The rest client</summary>
-        static readonly RestClient RestClient = new RestClient(BaseUrl);
+        private static readonly RestClient RestClient = new RestClient(BaseUrl);
 
-        static readonly RestRequest RestRequest = new RestRequest(Method.GET);
+        private static readonly RestRequest RestRequest = new RestRequest(Method.GET);
 
         private static void SetRestRequest(string resource)
         {

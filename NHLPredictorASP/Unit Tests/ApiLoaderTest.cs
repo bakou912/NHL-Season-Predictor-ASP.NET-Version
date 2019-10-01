@@ -1,14 +1,14 @@
-﻿using NUnit.Framework;
-using NHLPredictorASP.Classes;
+﻿using NHLPredictorASP.Classes;
+using NHLPredictorASP.Utility;
+using NUnit.Framework;
 
 namespace NHLPredictorASP.Unit_Tests
 {
     [TestFixture]
     public class ApiLoaderTest
     {
-
-        const int NB_TEAMS = 31, NB_SEASONS = 12;
-        string ovechkinId;
+        private const int NB_TEAMS = 31, NB_SEASONS = 12;
+        private string ovechkinId;
 
         [OneTimeSetUp]
         public void Before()

@@ -1,4 +1,4 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="NHLPredictorASP.SiteMaster" %>
+﻿<%@ Master Language="C#" AutoEventWireup="true" %>
 
 <!DOCTYPE html>
 
@@ -12,10 +12,9 @@
         <%: Scripts.Render("~/bundles/modernizr") %>
     </asp:PlaceHolder>
 
-    <webopt:bundleReference runat="server" Path="~/Content/css" />
+    <webopt:BundleReference runat="server" Path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <link rel="Stylesheet" href="~/Content/rankingStyle.css" type="text/css" />
-
 </head>
 <body>
     <form runat="server">
@@ -40,7 +39,7 @@
         </asp:ScriptManager>
 
         <div class="navbar navbar-inverse navbar-fixed-top">
-            <div  class="container">
+            <div class="container">
                 <div style="font-size: 150%;" class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                         <span class="icon-bar"></span>
@@ -61,7 +60,6 @@
             </asp:ContentPlaceHolder>
             <hr />
         </div>
-
     </form>
 </body>
 </html>

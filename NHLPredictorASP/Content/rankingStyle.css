@@ -4,17 +4,16 @@
 }
 
 .rankingGrid th {
-    
     background: #101010;
 }
 
-.rankingGrid a{
+.rankingGrid a {
     color: white;
 }
 
-.rankingGrid a:hover {
-    color: grey;
-}
+    .rankingGrid a:hover {
+        color: grey;
+    }
 
 .export {
     margin-bottom: 10px;

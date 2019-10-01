@@ -1,13 +1,14 @@
-﻿using NUnit.Framework;
-using NHLPredictorASP.Classes;
+﻿using NHLPredictorASP.Classes;
+using NHLPredictorASP.Entities;
+using NUnit.Framework;
 using System.Collections.Generic;
 
 namespace NHLPredictorASP.Unit_Tests
 {
     public class PlayerTest
     {
-        Player referencePlayer;
-        List<Season> career;
+        private Player referencePlayer;
+        private List<Season> career;
 
         [OneTimeSetUp]
         public void Before()

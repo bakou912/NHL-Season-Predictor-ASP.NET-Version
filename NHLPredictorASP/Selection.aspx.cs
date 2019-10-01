@@ -1,9 +1,12 @@
-﻿using System;
+﻿using NHLPredictorASP.Classes;
+using NHLPredictorASP.Deserialization;
+using NHLPredictorASP.Entities;
+using NHLPredictorASP.Utility;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using NHLPredictorASP.Classes;
 
 namespace NHLPredictorASP
 {
@@ -13,6 +16,7 @@ namespace NHLPredictorASP
         private static readonly string[] TeamUrl = { "https://www-league.nhlstatic.com/builds/site-core/01c1bfe15805d69e3ac31daa090865845c189b1d_1458063644/images/team/logo/current/", "_dark.svg" };
 
         #region Page and events related methods
+
         /// <summary>
         /// Loads the page and initializes the following components:
         /// The API loader used to fetch info from the NHL's API
@@ -23,23 +27,25 @@ namespace NHLPredictorASP
         /// <param name="e"></param>
         protected void Page_Load(object sender, EventArgs e)
         {
-            if(!IsPostBack)//Prevents from resetting the components at every postback
+            if (!IsPostBack)//Prevents from resetting the components at every postback
             {
-                teamsSelect.SelectedIndex = SelectionComponents.TeamIndex;
-                teamsSelect.DataSource = SelectionComponents.TeamList;
+                teamsSelect.SelectedIndex = SelectionResources.TeamIndex;
+                teamsSelect.DataSource = SelectionResources.TeamList;
                 teamsSelect.DataBind();
 
-                SelectionComponents.PersonList = SelectionComponents.TeamList[SelectionComponents.TeamIndex].PersonList;
+                SelectionResources.PersonList = SelectionResources.TeamList[SelectionResources.TeamIndex].PersonList;
 
-                playersSelect.SelectedIndex = SelectionComponents.PlayerIndex;
-                playersSelect.DataSource = SelectionComponents.PersonList;
+                playersSelect.SelectedIndex = SelectionResources.PlayerIndex;
+                playersSelect.DataSource = SelectionResources.PersonList;
                 playersSelect.DataBind();
 
-                ChangeImage(teamImg, TeamUrl, SelectionComponents.TeamList[SelectionComponents.TeamIndex].Id);
-                ChangeImage(playerImg, PlayerUrl, SelectionComponents.PersonList[SelectionComponents.PlayerIndex].Id);
+                ChangeImage(teamImg, TeamUrl, SelectionResources.TeamList[SelectionResources.TeamIndex].Id);
+                ChangeImage(playerImg, PlayerUrl, SelectionResources.PersonList[SelectionResources.PlayerIndex].Id);
             }
         }
-        #endregion
+
+        #endregion Page and events related methods
+
         /// <summary>
         /// Calls the needed methods to calculate and print the player's expected season in the result textbox
         /// </summary>
@@ -49,26 +55,29 @@ namespace NHLPredictorASP
         {
             if (playersSelect.SelectedItem != null)
             {
-                SelectionComponents.PlayerIndex = playersSelect.SelectedIndex;
+                SelectionResources.PlayerIndex = playersSelect.SelectedIndex;
                 computeButton.Enabled = false;
-                var person = SelectionComponents.PersonList[playersSelect.SelectedIndex] as StatsRoster;
+                var person = SelectionResources.PersonList[playersSelect.SelectedIndex] as StatsRoster;
 
                 //Check if the player hasn't already been loaded (avoiding to call the api again)
-                if (!SelectionComponents.PlayersMemory.Any(p => p.Id.Equals(SelectionComponents.PersonList[playersSelect.SelectedIndex].Id)))
+                if (!SelectionResources.PlayersMemory.Any(p => p.Id.Equals(SelectionResources.PersonList[playersSelect.SelectedIndex].Id)))
                 {
                     //Fetching the player through the player loader
                     var player = new Player(ApiLoader.LoadPlayer(DateTime.Now.Year, person.Id), person.Name, person.Id, person.Person.TeamAbv);
                     SeasonCalculator.CalculateExpectedSeason(player);
 
-                    //Adding player to the already calculated players
-                    SelectionComponents.PlayersMemory.Add(player);
- 
+                    //Adding player to the already calculated players if he has sufficient info
+                    if (player.HasSufficientInfo)
+                    {
+                        SelectionResources.PlayersMemory.Add(player);
+                    }
+
                     //Printing the player's expected season to the result textbox
                     result.Text = player.ToString();
                 }
                 else
                 {
-                    result.Text = SelectionComponents.PlayersMemory.First(p => p.Id.Equals(person.Id)).ToString();
+                    result.Text = SelectionResources.PlayersMemory.First(p => p.Id.Equals(person.Id)).ToString();
                 }
             }
         }
@@ -81,13 +90,13 @@ namespace NHLPredictorASP
         /// <param name="e"></param>
         protected void TeamsSelect_OnServerChange(object sender, EventArgs e)
         {
-            SelectionComponents.PlayerIndex = 0;
-            SelectionComponents.TeamIndex = teamsSelect.SelectedIndex;
-            SelectionComponents.PersonList = SelectionComponents.TeamList[teamsSelect.SelectedIndex].PersonList;
-            playersSelect.DataSource = SelectionComponents.PersonList;
+            SelectionResources.PlayerIndex = 0;
+            SelectionResources.TeamIndex = teamsSelect.SelectedIndex;
+            SelectionResources.PersonList = SelectionResources.TeamList[teamsSelect.SelectedIndex].PersonList;
+            playersSelect.DataSource = SelectionResources.PersonList;
             playersSelect.DataBind();
 
-            ChangeImage(teamImg, TeamUrl, SelectionComponents.TeamList[teamsSelect.SelectedIndex].Id);
+            ChangeImage(teamImg, TeamUrl, SelectionResources.TeamList[teamsSelect.SelectedIndex].Id);
             EnableComputeButton(sender, e);
         }
 
@@ -101,8 +110,8 @@ namespace NHLPredictorASP
         {
             if (sender == playersSelect)
             {
-                SelectionComponents.TeamIndex = teamsSelect.SelectedIndex;
-                SelectionComponents.PlayerIndex = playersSelect.SelectedIndex;
+                SelectionResources.TeamIndex = teamsSelect.SelectedIndex;
+                SelectionResources.PlayerIndex = playersSelect.SelectedIndex;
             }
 
             if (!computeButton.Enabled)
@@ -110,7 +119,7 @@ namespace NHLPredictorASP
                 computeButton.Enabled = true;
             }
 
-            ChangeImage(playerImg, PlayerUrl, SelectionComponents.PersonList[playersSelect.SelectedIndex].Id);
+            ChangeImage(playerImg, PlayerUrl, SelectionResources.PersonList[playersSelect.SelectedIndex].Id);
         }
 
         private void ChangeImage(Image img, string[] url, string id)
@@ -120,17 +129,18 @@ namespace NHLPredictorASP
                 img.ImageUrl = url[0] + id + url[1];
             }
         }
-        
+
         /// <summary>
         /// Initializes the teams collection through TeamCollection's contsructor
         /// </summary>
         public static void LoadTeamList()
         {
-            SelectionComponents.TeamList = new TeamList();
+            SelectionResources.TeamList = new TeamList();
         }
+
         public static void ResetPlayersMemory()
         {
-            SelectionComponents.PlayersMemory = new List<Player>();
+            SelectionResources.PlayersMemory = new List<Player>();
         }
 
         protected void Calibrate(object sender, EventArgs e)

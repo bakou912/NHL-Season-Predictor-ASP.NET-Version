@@ -1,10 +1,12 @@
-﻿using System;
+﻿using NHLPredictorASP.Classes;
+using NHLPredictorASP.Entities;
+using NHLPredictorASP.Utility;
+using System;
 using System.Data;
 using System.IO;
 using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using NHLPredictorASP.Classes;
 
 namespace NHLPredictorASP
 {
@@ -25,7 +27,7 @@ namespace NHLPredictorASP
                 _dt = Session["DataTable"] as DataTable;
             }
 
-            if (SelectionComponents.PlayersMemory != null && SelectionComponents.PlayersMemory.Count > 0)
+            if (SelectionResources.PlayersMemory != null && SelectionResources.PlayersMemory.Count > 0)
             {
                 //Calling the populating method
                 PopulateGrid();
@@ -51,7 +53,7 @@ namespace NHLPredictorASP
         /// Adds a player to the data table _dt's row table
         /// </summary>
         /// <param name="player">Player to add to the data table</param>
-        private void AddPlayer(Player player)
+        private void AddPlayerToDt(Player player)
         {
             _dt.Rows.Add(player.FullName, player.TeamAbv, player.ExpectedSeason.Assists, player.ExpectedSeason.Goals, player.ExpectedSeason.Points, player.ExpectedSeason.GamesPlayed);
         }
@@ -63,22 +65,26 @@ namespace NHLPredictorASP
         {
             exportButton.Visible = true;
 
-            if (SelectionComponents.PlayersMemory.Count < _dt.Rows.Count)
+            AddMissingPlayers();
+
+            BindGrid();
+        }
+
+        /// <summary>
+        /// Adds players that are in PlayersMemory and not in the data table
+        /// </summary>
+        private void AddMissingPlayers()
+        {
+            if (SelectionResources.PlayersMemory.Count < _dt.Rows.Count)
             {
                 return;
             }
 
             //Adds new players to the data table
-            for (var i = _dt.Rows.Count; i < SelectionComponents.PlayersMemory.Count; i++)
+            for (var i = _dt.Rows.Count; i < SelectionResources.PlayersMemory.Count; i++)
             {
-                //Adding new row containing the player's expected season's info if it has sufficient information
-                if (SelectionComponents.PlayersMemory[i].HasSufficientInfo)
-                {
-                    AddPlayer(SelectionComponents.PlayersMemory[i]);
-                }
+                AddPlayerToDt(SelectionResources.PlayersMemory[i]);
             }
-
-            BindGrid();
         }
 
         /// <summary>
@@ -119,16 +125,16 @@ namespace NHLPredictorASP
         {
             _dt.Rows.Clear();
 
-            foreach (var team in SelectionComponents.TeamList)
+            foreach (var team in SelectionResources.TeamList)
             {
-                foreach(var person in team.PersonList)
+                foreach (var person in team.PersonList)
                 {
                     var player = new Player(ApiLoader.LoadPlayer(DateTime.Now.Year, person.Id), person.Name, person.Id, person.Person.TeamAbv);
                     SeasonCalculator.CalculateExpectedSeason(player);
 
                     if (player.HasSufficientInfo)
                     {
-                        AddPlayer(player);
+                        AddPlayerToDt(player);
                     }
                 }
             }
@@ -177,9 +183,10 @@ namespace NHLPredictorASP
 
             Response.Write(stringWriter.ToString());
             Response.End();
+            htw.Dispose();
         }
 
         //Prevents the RenderControl method from verifying the rendering for the ranking GridView
-        public override void VerifyRenderingInServerForm(Control control) {}
+        public override void VerifyRenderingInServerForm(Control control) { }
     }
 }

@@ -1,6 +1,7 @@
-﻿using System;
+﻿using NHLPredictorASP.Deserialization;
 
-namespace NHLPredictorASP.Classes
+
+namespace NHLPredictorASP.Entities
 {
     #region Season Class representing the offensive production of a Player for a given year
 
@@ -20,17 +21,17 @@ namespace NHLPredictorASP.Classes
             GamesPlayed = 0;
         }
 
-        public Season(int assists, int goals, int gamesPlayed)
+        public Season(int assists, int goals, int gamesPlayed, string seasonYears = "")
         {
             Assists = assists;
             Goals = goals;
             GamesPlayed = gamesPlayed;
+            SeasonYears = seasonYears;
             CalculatePoints();
         }
-        public Season(Split split) : this(split.Stat.Assists, split.Stat.Goals, split.Stat.Games)
-        {
-            SeasonYears = split.Season;
-        }
+
+        public Season(Split split) : this(split.Stat.Assists, split.Stat.Goals, split.Stat.Games, split.Season)
+        {}
 
         public void CalculatePoints()
         {
@@ -39,7 +40,7 @@ namespace NHLPredictorASP.Classes
 
         public override bool Equals(object obj)
         {
-            if (!(obj is Season))
+            if (obj == null || !(obj is Season))
             {
                 return false;
             }
@@ -48,7 +49,6 @@ namespace NHLPredictorASP.Classes
 
             return s.Points == Points && s.Goals == Goals && s.GamesPlayed == GamesPlayed && GetHashCode() == s.GetHashCode();
         }
-
 
         public override int GetHashCode()
         {
@@ -66,6 +66,5 @@ namespace NHLPredictorASP.Classes
             }
         }
     }
+    #endregion Season Class representing the offensive production of a Player for a given year
 }
-
-#endregion

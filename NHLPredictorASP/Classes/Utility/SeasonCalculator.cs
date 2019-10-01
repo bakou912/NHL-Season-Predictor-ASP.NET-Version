@@ -1,12 +1,13 @@
-﻿using System;
+﻿using NHLPredictorASP.Deserialization;
+using NHLPredictorASP.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NHLPredictorASP.Classes
+namespace NHLPredictorASP.Utility
 {
     public static class SeasonCalculator
     {
-
         //Adjustment calculated with the CalibrateCalculation method.
         public static double Adjustment { get; private set; } = 1.0152455599855;
 
@@ -16,7 +17,7 @@ namespace NHLPredictorASP.Classes
         /// them with the actual last nbSeasons seasons.
         /// <param name="nbSeason">Integer representing the number of seasons to calculate for the calibration</param>
         /// </summary>
-        public  static void CalibrateCalculation(int nbSeasons)
+        public static void CalibrateCalculation(int nbSeasons)
         {
             //All actual points scored by any player in the last {nbSeasons} seasons
             var totalPoints = 0.0;
@@ -147,7 +148,7 @@ namespace NHLPredictorASP.Classes
         }
 
         /// <summary>
-        /// Adds weight the the weightsList at index i. Uses arbritrary multipliers to make most recent seasons more important 
+        /// Adds weight the the weightsList at index i. Uses arbritrary multipliers to make most recent seasons more important
         /// </summary>
         /// <param name="weightsList">Current list of weights each season has on the overall calculation</param>
         /// <param name="i">Index indicating which season's weight is added</param>
@@ -160,7 +161,6 @@ namespace NHLPredictorASP.Classes
             else if (i == 1)
             {
                 weightsList.Add((double)(player.SeasonList.Count - i) / (player.SeasonList.Count) * 1.1f);
-
             }
             else
             {
