@@ -1,18 +1,20 @@
-﻿using NHLPredictorASP.Deserialization;
+﻿#region Header
 
+// Author: Tommy Andrews
+// File: Season.cs
+// Project: NHLPredictorASP
+// Created: 09/30/2019
 
-namespace NHLPredictorASP.Entities
+#endregion
+
+using NHLPredictorASP.Classes.Deserialization;
+
+namespace NHLPredictorASP.Classes.Entities
 {
     #region Season Class representing the offensive production of a Player for a given year
 
     public class Season
     {
-        public int Assists { get; set; }
-        public int Goals { get; set; }
-        public int Points { get; set; }
-        public int GamesPlayed { get; set; }
-        public string SeasonYears { get; private set; }
-
         public Season()
         {
             Assists = 0;
@@ -31,7 +33,14 @@ namespace NHLPredictorASP.Entities
         }
 
         public Season(Split split) : this(split.Stat.Assists, split.Stat.Goals, split.Stat.Games, split.Season)
-        {}
+        {
+        }
+
+        public int Assists { get; set; }
+        public int Goals { get; set; }
+        public int Points { get; set; }
+        public int GamesPlayed { get; set; }
+        public string SeasonYears { get; }
 
         public void CalculatePoints()
         {
@@ -40,14 +49,15 @@ namespace NHLPredictorASP.Entities
 
         public override bool Equals(object obj)
         {
-            if (obj == null || !(obj is Season))
+            if (!(obj is Season))
             {
                 return false;
             }
 
-            Season s = obj as Season;
+            var s = (Season) obj;
 
-            return s.Points == Points && s.Goals == Goals && s.GamesPlayed == GamesPlayed && GetHashCode() == s.GetHashCode();
+            return s.Points == Points && s.Goals == Goals && s.GamesPlayed == GamesPlayed &&
+                   GetHashCode() == s.GetHashCode();
         }
 
         public override int GetHashCode()
@@ -55,16 +65,17 @@ namespace NHLPredictorASP.Entities
             unchecked
             {
                 // Choose large primes to avoid hashing collisions
-                const int HashingBase = (int)2166136261;
-                const int HashingMultiplier = 16777619;
+                const int hashingBase = (int) 2166136261;
+                const int hashingMultiplier = 16777619;
 
-                int hash = HashingBase;
-                hash = (hash * HashingMultiplier) ^ (Assists != 0 ? Assists.GetHashCode() : 0);
-                hash = (hash * HashingMultiplier) ^ (Goals != 0 ? Goals.GetHashCode() : 0);
-                hash = (hash * HashingMultiplier) ^ (GamesPlayed != 0 ? GamesPlayed.GetHashCode() : 0);
+                var hash = hashingBase;
+                hash = (hash * hashingMultiplier) ^ (Assists != 0 ? Assists.GetHashCode() : 0);
+                hash = (hash * hashingMultiplier) ^ (Goals != 0 ? Goals.GetHashCode() : 0);
+                hash = (hash * hashingMultiplier) ^ (GamesPlayed != 0 ? GamesPlayed.GetHashCode() : 0);
                 return hash;
             }
         }
     }
+
     #endregion Season Class representing the offensive production of a Player for a given year
 }

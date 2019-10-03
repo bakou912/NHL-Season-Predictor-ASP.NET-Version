@@ -1,4 +1,13 @@
-﻿using System.Reflection;
+﻿#region Header
+
+// Author: Tommy Andrews
+// File: AssemblyInfo.cs
+// Project: NHLPredictorASP
+// Created: 06/07/2019
+
+#endregion
+
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following

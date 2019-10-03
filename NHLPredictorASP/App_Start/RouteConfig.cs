@@ -1,7 +1,16 @@
-using Microsoft.AspNet.FriendlyUrls;
-using System.Web.Routing;
+#region Header
 
-namespace WebNHLPredictor
+// Author: Tommy Andrews
+// File: RouteConfig.cs
+// Project: NHLPredictorASP
+// Created: 06/07/2019
+
+#endregion
+
+using System.Web.Routing;
+using Microsoft.AspNet.FriendlyUrls;
+
+namespace NHLPredictorASP
 {
     public static class RouteConfig
     {

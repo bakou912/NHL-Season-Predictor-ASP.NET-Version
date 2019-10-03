@@ -1,33 +1,48 @@
-﻿using NHLPredictorASP.Classes;
-using NHLPredictorASP.Deserialization;
-using NHLPredictorASP.Entities;
-using NHLPredictorASP.Utility;
+﻿#region Header
+
+// Author: Tommy Andrews
+// File: Selection.aspx.cs
+// Project: NHLPredictorASP
+// Created: 06/07/2019
+
+#endregion
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using NHLPredictorASP.Classes;
+using NHLPredictorASP.Classes.Deserialization;
+using NHLPredictorASP.Classes.Entities;
+using NHLPredictorASP.Classes.Utility;
 
 namespace NHLPredictorASP
 {
     public partial class Selection : Page
     {
-        private static readonly string[] PlayerUrl = { "https://nhl.bamcontent.com/images/headshots/current/168x168/", ".jpg" };
-        private static readonly string[] TeamUrl = { "https://www-league.nhlstatic.com/builds/site-core/01c1bfe15805d69e3ac31daa090865845c189b1d_1458063644/images/team/logo/current/", "_dark.svg" };
+        private static readonly string[] PlayerUrl =
+            {"https://nhl.bamcontent.com/images/headshots/current/168x168/", ".jpg"};
+
+        private static readonly string[] TeamUrl =
+        {
+            "https://www-league.nhlstatic.com/builds/site-core/01c1bfe15805d69e3ac31daa090865845c189b1d_1458063644/images/team/logo/current/",
+            "_dark.svg"
+        };
 
         #region Page and events related methods
 
         /// <summary>
-        /// Loads the page and initializes the following components:
-        /// The API loader used to fetch info from the NHL's API
-        /// The team collection (all the teams loaded from the NHL's API)
-        /// The player memory, used to store already calculated players (prevents extra calls to the API)
+        ///     Loads the page and initializes the following components:
+        ///     The API loader used to fetch info from the NHL's API
+        ///     The team collection (all the teams loaded from the NHL's API)
+        ///     The player memory, used to store already calculated players (prevents extra calls to the API)
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)//Prevents from resetting the components at every postback
+            if (!IsPostBack) //Prevents from resetting the components at every postback
             {
                 teamsSelect.SelectedIndex = SelectionResources.TeamIndex;
                 teamsSelect.DataSource = SelectionResources.TeamList;
@@ -47,44 +62,48 @@ namespace NHLPredictorASP
         #endregion Page and events related methods
 
         /// <summary>
-        /// Calls the needed methods to calculate and print the player's expected season in the result textbox
+        ///     Calls the needed methods to calculate and print the player's expected season in the result textbox
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         public void ComputePlayer(object sender, EventArgs e)
         {
-            if (playersSelect.SelectedItem != null)
+            if (playersSelect.SelectedItem == null)
             {
-                SelectionResources.PlayerIndex = playersSelect.SelectedIndex;
-                computeButton.Enabled = false;
-                var person = SelectionResources.PersonList[playersSelect.SelectedIndex] as StatsRoster;
+                return;
+            }
 
-                //Check if the player hasn't already been loaded (avoiding to call the api again)
-                if (!SelectionResources.PlayersMemory.Any(p => p.Id.Equals(SelectionResources.PersonList[playersSelect.SelectedIndex].Id)))
+            SelectionResources.PlayerIndex = playersSelect.SelectedIndex;
+            computeButton.Enabled = false;
+            var person = SelectionResources.PersonList[playersSelect.SelectedIndex];
+
+            //Check if the player hasn't already been loaded (avoiding to call the api again)
+            if (!SelectionResources.PlayersMemory.Any(p =>
+                p.Id.Equals(SelectionResources.PersonList[playersSelect.SelectedIndex].Id)))
+            {
+                //Fetching the player through the player loader
+                var player = new Player(ApiLoader.LoadPlayer(DateTime.Now.Year, person.Id), person.Name, person.Id,
+                    person.Person.TeamAbv);
+                SeasonCalculator.CalculateExpectedSeason(player);
+
+                //Adding player to the already calculated players if he has sufficient info
+                if (player.HasSufficientInfo)
                 {
-                    //Fetching the player through the player loader
-                    var player = new Player(ApiLoader.LoadPlayer(DateTime.Now.Year, person.Id), person.Name, person.Id, person.Person.TeamAbv);
-                    SeasonCalculator.CalculateExpectedSeason(player);
-
-                    //Adding player to the already calculated players if he has sufficient info
-                    if (player.HasSufficientInfo)
-                    {
-                        SelectionResources.PlayersMemory.Add(player);
-                    }
-
-                    //Printing the player's expected season to the result textbox
-                    result.Text = player.ToString();
+                    SelectionResources.PlayersMemory.Add(player);
                 }
-                else
-                {
-                    result.Text = SelectionResources.PlayersMemory.First(p => p.Id.Equals(person.Id)).ToString();
-                }
+
+                //Printing the player's expected season to the result textbox
+                result.Text = player.ToString();
+            }
+            else
+            {
+                result.Text = SelectionResources.PlayersMemory.First(p => p.Id.Equals(person.Id)).ToString();
             }
         }
 
         /// <summary>
-        /// teamsListbox SelectionChanged event handling method
-        /// Changes the playersListBox content to the newly selected team in teamsListBox
+        ///     teamsListbox SelectionChanged event handling method
+        ///     Changes the playersListBox content to the newly selected team in teamsListBox
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -101,8 +120,8 @@ namespace NHLPredictorASP
         }
 
         /// <summary>
-        /// playersListbox SelectionChanged event handling method
-        /// When selection is changed and the button is disabled, it gets enabled
+        ///     playersListbox SelectionChanged event handling method
+        ///     When selection is changed and the button is disabled, it gets enabled
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -128,19 +147,6 @@ namespace NHLPredictorASP
             {
                 img.ImageUrl = url[0] + id + url[1];
             }
-        }
-
-        /// <summary>
-        /// Initializes the teams collection through TeamCollection's contsructor
-        /// </summary>
-        public static void LoadTeamList()
-        {
-            SelectionResources.TeamList = new TeamList();
-        }
-
-        public static void ResetPlayersMemory()
-        {
-            SelectionResources.PlayersMemory = new List<Player>();
         }
 
         protected void Calibrate(object sender, EventArgs e)

@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebNHLPredictor {
+namespace NHLPredictorASP {
     
     
     public partial class ViewSwitcher {

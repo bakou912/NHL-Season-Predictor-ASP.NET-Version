@@ -1,11 +1,21 @@
-using Microsoft.AspNet.FriendlyUrls.Resolvers;
+#region Header
+
+// Author: Tommy Andrews
+// File: ViewSwitcher.ascx.cs
+// Project: NHLPredictorASP
+// Created: 06/07/2019
+
+#endregion
+
 using System;
 using System.Web;
 using System.Web.Routing;
+using System.Web.UI;
+using Microsoft.AspNet.FriendlyUrls.Resolvers;
 
-namespace WebNHLPredictor
+namespace NHLPredictorASP
 {
-    public partial class ViewSwitcher : System.Web.UI.UserControl
+    public partial class ViewSwitcher : UserControl
     {
         protected string CurrentView { get; private set; }
 
@@ -28,10 +38,11 @@ namespace WebNHLPredictor
             if (switchViewRoute == null)
             {
                 // Friendly URLs is not enabled or the name of the switch view route is out of sync
-                this.Visible = false;
+                Visible = false;
                 return;
             }
-            var url = GetRouteUrl(switchViewRouteName, new { view = AlternateView, __FriendlyUrls_SwitchViews = true });
+
+            var url = GetRouteUrl(switchViewRouteName, new {view = AlternateView, __FriendlyUrls_SwitchViews = true});
             url += "?ReturnUrl=" + HttpUtility.UrlEncode(Request.RawUrl);
             SwitchUrl = url;
         }

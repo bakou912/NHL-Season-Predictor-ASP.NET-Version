@@ -1,1 +1,1 @@
-﻿<%@ Application Codebehind="Global.asax.cs" Inherits="WebNHLPredictor.Global" Language="C#" %>
+﻿<%@ Application Codebehind="Global.asax.cs" Inherits="NHLPredictorASP.Global" Language="C#" %>

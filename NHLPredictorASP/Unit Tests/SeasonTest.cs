@@ -1,5 +1,13 @@
-﻿using NHLPredictorASP.Classes;
-using NHLPredictorASP.Entities;
+﻿#region Header
+
+// Author: Tommy Andrews
+// File: SeasonTest.cs
+// Project: NHLPredictorASP
+// Created: 09/29/2019
+
+#endregion
+
+using NHLPredictorASP.Classes.Entities;
 using NUnit.Framework;
 
 namespace NHLPredictorASP.Unit_Tests
@@ -7,7 +15,7 @@ namespace NHLPredictorASP.Unit_Tests
     [TestFixture]
     public class SeasonTest
     {
-        private readonly Season testSeason = new Season(15, 15, 15);
+        private readonly Season _testSeason = new Season(15, 15, 15);
 
         [OneTimeSetUp]
         public void Before()
@@ -19,7 +27,7 @@ namespace NHLPredictorASP.Unit_Tests
         [Test]
         public void TestCalculatePoints()
         {
-            Assert.AreEqual(testSeason.Points, 30);
+            Assert.AreEqual(_testSeason.Points, 30);
         }
 
         //Equals method should compare two seasons correctly
@@ -27,13 +35,13 @@ namespace NHLPredictorASP.Unit_Tests
         [Test]
         public void TestEquals()
         {
-            Season seasonFalse = new Season(1, 2, 3);
-            Season seasonTrue = new Season(15, 15, 15);
+            var seasonFalse = new Season(1, 2, 3);
+            var seasonTrue = new Season(15, 15, 15);
 
-            Assert.IsTrue(seasonTrue.Equals(testSeason));
-            Assert.IsTrue(testSeason.Equals(seasonTrue));
-            Assert.IsFalse(testSeason.Equals(seasonFalse));
-            Assert.IsFalse(seasonFalse.Equals(testSeason));
+            Assert.IsTrue(seasonTrue.Equals(_testSeason));
+            Assert.IsTrue(_testSeason.Equals(seasonTrue));
+            Assert.IsFalse(_testSeason.Equals(seasonFalse));
+            Assert.IsFalse(seasonFalse.Equals(_testSeason));
         }
     }
 }

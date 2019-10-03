@@ -1,9 +1,18 @@
-﻿using System;
+﻿#region Header
+
+// Author: Tommy Andrews
+// File: Global.asax.cs
+// Project: NHLPredictorASP
+// Created: 06/07/2019
+
+#endregion
+
+using System;
 using System.Web;
 using System.Web.Optimization;
 using System.Web.Routing;
 
-namespace WebNHLPredictor
+namespace NHLPredictorASP
 {
     public class Global : HttpApplication
     {

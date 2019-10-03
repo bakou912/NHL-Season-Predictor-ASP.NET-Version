@@ -1,14 +1,24 @@
-﻿using Newtonsoft.Json;
-using NHLPredictorASP.Deserialization;
-using NHLPredictorASP.Entities;
-using RestSharp;
+﻿#region Header
+
+// Author: Tommy Andrews
+// File: ApiLoader.cs
+// Project: NHLPredictorASP
+// Created: 09/30/2019
+
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
+using NHLPredictorASP.Classes.Deserialization;
+using NHLPredictorASP.Classes.Entities;
+using RestSharp;
 
-namespace NHLPredictorASP.Utility
+namespace NHLPredictorASP.Classes.Utility
 {
     /// <summary>
-    /// Class needed for deserialization of the team list
+    ///     Class needed for deserialization of the team list
     /// </summary>
     public class TeamArrayWrapper
     {
@@ -71,7 +81,7 @@ namespace NHLPredictorASP.Utility
         }
 
         /// <summary>
-        /// Fetching player object by deserializing StatsList of all seasons in career
+        ///     Fetching player object by deserializing StatsList of all seasons in career
         /// </summary>
         /// <param name="year">year to estimate</param>
         /// <param name="id">player's ID</param>
@@ -87,7 +97,7 @@ namespace NHLPredictorASP.Utility
 
             var statsList = JsonConvert.DeserializeObject<StatsList>(response.Content);
 
-            string lastYear = "";
+            var lastYear = "";
             foreach (var split in statsList.Stats[0].Splits)
             {
                 if (split.League.Id != 133)
@@ -96,7 +106,7 @@ namespace NHLPredictorASP.Utility
                 }
 
                 var newSeason = new Season(split);
-                if (newSeason.SeasonYears.CompareTo(seasonYears) > 0)
+                if (string.Compare(newSeason.SeasonYears, seasonYears, StringComparison.Ordinal) > 0)
                 {
                     break;
                 }

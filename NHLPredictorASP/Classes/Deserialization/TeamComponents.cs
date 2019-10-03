@@ -1,8 +1,17 @@
-﻿using NHLPredictorASP.Utility;
+﻿#region Header
+
+// Author: Tommy Andrews
+// File: TeamComponents.cs
+// Project: NHLPredictorASP
+// Created: 09/30/2019
+
+#endregion
+
 using System.Collections.Generic;
 using System.Linq;
+using NHLPredictorASP.Classes.Utility;
 
-namespace NHLPredictorASP.Deserialization
+namespace NHLPredictorASP.Classes.Deserialization
 {
     #region Objects needed for deserialization of the JSON teams/rosters coming from the NHL's API
 
@@ -14,7 +23,10 @@ namespace NHLPredictorASP.Deserialization
         public string Id => Person.Id;
         public string Code => Position.Code;
 
-        public override string ToString() => Person.FullName;
+        public override string ToString()
+        {
+            return Person.FullName;
+        }
     }
 
     public class RosterList
@@ -36,7 +48,10 @@ namespace NHLPredictorASP.Deserialization
             set => Roster.Roster = value;
         }
 
-        public override string ToString() => $"{Name} ({Abbreviation})";
+        public override string ToString()
+        {
+            return $"{Name} ({Abbreviation})";
+        }
     }
 
     #endregion Objects needed for deserialization of the JSON teams/rosters coming from the NHL's API

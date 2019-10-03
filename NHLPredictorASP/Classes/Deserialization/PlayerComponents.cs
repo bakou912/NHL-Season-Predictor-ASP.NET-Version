@@ -1,7 +1,16 @@
-﻿using NHLPredictorASP.Entities;
-using System.Collections.Generic;
+﻿#region Header
 
-namespace NHLPredictorASP.Deserialization
+// Author: Tommy Andrews
+// File: PlayerComponents.cs
+// Project: NHLPredictorASP
+// Created: 09/30/2019
+
+#endregion
+
+using System.Collections.Generic;
+using NHLPredictorASP.Classes.Entities;
+
+namespace NHLPredictorASP.Classes.Deserialization
 {
     #region Objects needed for deserialization of the JSON persons/stats coming from the NHL's API
 
@@ -10,7 +19,6 @@ namespace NHLPredictorASP.Deserialization
         public int Assists { get; set; }
         public int Goals { get; set; }
         public int Games { get; set; }
-        public Season Season => new Season(Assists, Goals, Games);
     }
 
     public class League
@@ -43,20 +51,16 @@ namespace NHLPredictorASP.Deserialization
 
     public class Person
     {
-        public string Id { get; set; }
-        public string FullName { get; set; }
-        public string TeamAbv { get; set; }
-        public bool Active { get; set; }
-
         public Person()
         {
             Active = true;
         }
+
+        public string Id { get; set; }
+        public string FullName { get; set; }
+        public string TeamAbv { get; set; }
+        public bool Active { get; set; }
     }
 
-    public class PersonList
-    {
-        public List<Person> People { get; set; }
-    }
     #endregion Objects needed for deserialization of the JSON persons/stats coming from the NHL's API
 }

@@ -1,20 +1,12 @@
 ﻿.rankingGrid th, .rankingGrid td {
-    text-align: center;
     padding: 10px;
+    text-align: center;
 }
 
-.rankingGrid th {
-    background: #101010;
-}
+.rankingGrid th { background: #101010; }
 
-.rankingGrid a {
-    color: white;
-}
+.rankingGrid a { color: white; }
 
-    .rankingGrid a:hover {
-        color: grey;
-    }
+.rankingGrid a:hover { color: grey; }
 
-.export {
-    margin-bottom: 10px;
-}
+.export { margin-bottom: 10px; }

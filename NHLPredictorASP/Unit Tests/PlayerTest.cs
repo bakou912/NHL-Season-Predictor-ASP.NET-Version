@@ -1,14 +1,22 @@
-﻿using NHLPredictorASP.Classes;
-using NHLPredictorASP.Entities;
-using NUnit.Framework;
+﻿#region Header
+
+// Author: Tommy Andrews
+// File: PlayerTest.cs
+// Project: NHLPredictorASP
+// Created: 09/29/2019
+
+#endregion
+
 using System.Collections.Generic;
+using NHLPredictorASP.Classes.Entities;
+using NUnit.Framework;
 
 namespace NHLPredictorASP.Unit_Tests
 {
     public class PlayerTest
     {
-        private Player referencePlayer;
         private List<Season> career;
+        private Player referencePlayer;
 
         [OneTimeSetUp]
         public void Before()
@@ -22,28 +30,23 @@ namespace NHLPredictorASP.Unit_Tests
             referencePlayer = new Player(career);
         }
 
-        /// <summary>
-        /// HasSufficientInfo should be false when:
-        /// SeasonList.count < 3, GameAverage < 50
-        /// HasSufficientInfo should be true otherwise:
-        /// </summary>
         [Test]
         public void TestHasSufficientInfo()
         {
-            List<Season> insufficientQuantity = new List<Season>
+            var insufficientQuantity = new List<Season>
             {
                 new Season(0, 0, 50),
                 new Season(0, 0, 50)
             };
-            Player testPlayer = new Player(insufficientQuantity);
+            var testPlayer = new Player(insufficientQuantity);
             Assert.IsFalse(testPlayer.HasSufficientInfo);
 
-            List<Season> sufficientSeason = insufficientQuantity;
+            var sufficientSeason = insufficientQuantity;
             sufficientSeason.Add(new Season(0, 0, 50));
             testPlayer = new Player(sufficientSeason);
             Assert.IsTrue(testPlayer.HasSufficientInfo);
 
-            List<Season> insufficientGameAverage = new List<Season>
+            var insufficientGameAverage = new List<Season>
             {
                 new Season(0, 0, 50),
                 new Season(0, 0, 30),
@@ -58,16 +61,16 @@ namespace NHLPredictorASP.Unit_Tests
         [Test]
         public void TestEquals()
         {
-            Player playerTrue = referencePlayer;
+            var playerTrue = referencePlayer;
             Assert.IsTrue(playerTrue.Equals(referencePlayer));
 
-            List<Season> falseCareer = new List<Season>
+            var falseCareer = new List<Season>
             {
                 new Season(13, 45, 52),
                 new Season(73, 45, 51),
                 new Season(13, 16, 52)
             };
-            Player playerFalse = new Player(falseCareer);
+            var playerFalse = new Player(falseCareer);
             Assert.IsFalse(playerFalse.Equals(referencePlayer));
         }
     }

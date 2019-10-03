@@ -1,12 +1,21 @@
-﻿using NHLPredictorASP.Classes;
-using NHLPredictorASP.Entities;
-using NHLPredictorASP.Utility;
+﻿#region Header
+
+// Author: Tommy Andrews
+// File: Ranking.aspx.cs
+// Project: NHLPredictorASP
+// Created: 06/07/2019
+
+#endregion
+
 using System;
 using System.Data;
 using System.IO;
 using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using NHLPredictorASP.Classes;
+using NHLPredictorASP.Classes.Entities;
+using NHLPredictorASP.Classes.Utility;
 
 namespace NHLPredictorASP
 {
@@ -35,7 +44,7 @@ namespace NHLPredictorASP
         }
 
         /// <summary>
-        /// Initializes the DataTable _dt with the right columns
+        ///     Initializes the DataTable _dt with the right columns
         /// </summary>
         private void InitDataTable()
         {
@@ -50,16 +59,17 @@ namespace NHLPredictorASP
         }
 
         /// <summary>
-        /// Adds a player to the data table _dt's row table
+        ///     Adds a player to the data table's' row table
         /// </summary>
         /// <param name="player">Player to add to the data table</param>
         private void AddPlayerToDt(Player player)
         {
-            _dt.Rows.Add(player.FullName, player.TeamAbv, player.ExpectedSeason.Assists, player.ExpectedSeason.Goals, player.ExpectedSeason.Points, player.ExpectedSeason.GamesPlayed);
+            _dt.Rows.Add(player.FullName, player.TeamAbv, player.ExpectedSeason.Assists, player.ExpectedSeason.Goals,
+                player.ExpectedSeason.Points, player.ExpectedSeason.GamesPlayed);
         }
 
         /// <summary>
-        /// Populates and binds the grid to the player memory
+        ///     Populates and binds the grid to the player memory
         /// </summary>
         private void PopulateGrid()
         {
@@ -71,7 +81,7 @@ namespace NHLPredictorASP
         }
 
         /// <summary>
-        /// Adds players that are in PlayersMemory and not in the data table
+        ///     Adds players that are in PlayersMemory and not in the data table
         /// </summary>
         private void AddMissingPlayers()
         {
@@ -88,14 +98,16 @@ namespace NHLPredictorASP
         }
 
         /// <summary>
-        /// Sorts the ranking GridView according to a specific column
-        /// Can be descending or ascending
+        ///     Sorts the ranking GridView according to a specific column
+        ///     Can be descending or ascending
         /// </summary>
         protected void SortColumn_Event(object sender, GridViewSortEventArgs e)
         {
             var direction = SortDirection.Ascending;
 
-            if (Session["SortExpression"] == null || (SortDirection)Session["SortDirection"] == SortDirection.Ascending || !Session["SortExpression"].Equals(e.SortExpression))
+            if (Session["SortExpression"] == null ||
+                (SortDirection) Session["SortDirection"] == SortDirection.Ascending ||
+                !Session["SortExpression"].Equals(e.SortExpression))
             {
                 direction = SortDirection.Descending;
             }
@@ -113,11 +125,12 @@ namespace NHLPredictorASP
             {
                 Session["SortExpression"] = e.SortExpression;
             }
+
             BindGrid();
         }
 
         /// <summary>
-        /// Computes all players in the NHL and populates the ranking grid
+        ///     Computes all players in the NHL and populates the ranking grid
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -129,7 +142,8 @@ namespace NHLPredictorASP
             {
                 foreach (var person in team.PersonList)
                 {
-                    var player = new Player(ApiLoader.LoadPlayer(DateTime.Now.Year, person.Id), person.Name, person.Id, person.Person.TeamAbv);
+                    var player = new Player(ApiLoader.LoadPlayer(DateTime.Now.Year, person.Id), person.Name, person.Id,
+                        person.Person.TeamAbv);
                     SeasonCalculator.CalculateExpectedSeason(player);
 
                     if (player.HasSufficientInfo)
@@ -138,6 +152,7 @@ namespace NHLPredictorASP
                     }
                 }
             }
+
             BindGrid();
 
             //Making the computeAll button invisible
@@ -148,7 +163,7 @@ namespace NHLPredictorASP
         }
 
         /// <summary>
-        /// Binds the DataTable to the ranking GridView
+        ///     Binds the DataTable to the ranking GridView
         /// </summary>
         protected void BindGrid()
         {
@@ -159,7 +174,7 @@ namespace NHLPredictorASP
         }
 
         /// <summary>
-        /// Exports the present ranking grid to a Word file
+        ///     Exports the present ranking grid to a Word file
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -187,6 +202,8 @@ namespace NHLPredictorASP
         }
 
         //Prevents the RenderControl method from verifying the rendering for the ranking GridView
-        public override void VerifyRenderingInServerForm(Control control) { }
+        public override void VerifyRenderingInServerForm(Control control)
+        {
+        }
     }
 }
