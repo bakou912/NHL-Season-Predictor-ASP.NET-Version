@@ -52,6 +52,7 @@ namespace NHLPredictorASP
             //Initiating data table's column model
             _dt.Columns.Add("Name", typeof(string));
             _dt.Columns.Add("Team", typeof(string));
+            _dt.Columns.Add("Pos", typeof(string));
             _dt.Columns.Add("A", typeof(int));
             _dt.Columns.Add("G", typeof(int));
             _dt.Columns.Add("P", typeof(int));
@@ -64,7 +65,7 @@ namespace NHLPredictorASP
         /// <param name="player">Player to add to the data table</param>
         private void AddPlayerToDt(Player player)
         {
-            _dt.Rows.Add(player.FullName, player.TeamAbv, player.ExpectedSeason.Assists, player.ExpectedSeason.Goals,
+            _dt.Rows.Add(player.FullName, player.TeamAbv, player.Code, player.ExpectedSeason.Assists, player.ExpectedSeason.Goals,
                 player.ExpectedSeason.Points, player.ExpectedSeason.GamesPlayed);
         }
 
@@ -142,8 +143,7 @@ namespace NHLPredictorASP
             {
                 foreach (var person in team.PersonList)
                 {
-                    var player = new Player(ApiLoader.LoadPlayer(DateTime.Now.Year, person.Id), person.Name, person.Id,
-                        person.Person.TeamAbv);
+                    var player = new Player(ApiLoader.LoadPlayer(DateTime.Now.Year, person.Id), person);
                     SeasonCalculator.CalculateExpectedSeason(player);
 
                     if (player.HasSufficientInfo)

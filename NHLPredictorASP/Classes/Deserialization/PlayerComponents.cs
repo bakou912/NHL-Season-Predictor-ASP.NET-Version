@@ -47,7 +47,7 @@ namespace NHLPredictorASP.Classes.Deserialization
     public class Position
     {
         public string Code { get; set; }
-    }
+    } 
 
     public class Person
     {

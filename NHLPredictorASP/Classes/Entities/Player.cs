@@ -16,6 +16,7 @@ namespace NHLPredictorASP.Classes.Entities
 
     public class Player : Person
     {
+        public string Code { get; set; }
         public Player(List<Season> seasonsToDuplicate)
         {
             SeasonList = new List<Season>();
@@ -36,11 +37,12 @@ namespace NHLPredictorASP.Classes.Entities
         /// <param name="name">The wanted name for this Player</param>
         /// <param name="id">The wanted id for this Player</param>
         /// <param name="teamAbv"></param>
-        public Player(Player p, string name, string id, string teamAbv) : this(p.SeasonList)
+        public Player(Player p, StatsRoster person) : this(p.SeasonList)
         {
-            Id = id;
-            FullName = name;
-            TeamAbv = teamAbv;
+            Id = person.Id;
+            FullName = person.Person.FullName;
+            TeamAbv = person.Person.TeamAbv;
+            Code = person.Code;
         }
 
         //The list of seasons in this Player's career

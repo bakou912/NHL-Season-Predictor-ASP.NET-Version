@@ -82,8 +82,7 @@ namespace NHLPredictorASP
                 p.Id.Equals(SelectionResources.PersonList[playersSelect.SelectedIndex].Id)))
             {
                 //Fetching the player through the player loader
-                var player = new Player(ApiLoader.LoadPlayer(DateTime.Now.Year, person.Id), person.Name, person.Id,
-                    person.Person.TeamAbv);
+                var player = new Player(ApiLoader.LoadPlayer(DateTime.Now.Year, person.Id), person);
                 SeasonCalculator.CalculateExpectedSeason(player);
 
                 //Adding player to the already calculated players if he has sufficient info
