@@ -10,10 +10,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
 using NHLPredictorASP.Classes.Deserialization;
 using NHLPredictorASP.Classes.Entities;
 using RestSharp;
+using RestSharp.Extensions;
 
 namespace NHLPredictorASP.Classes.Utility
 {
@@ -49,9 +49,10 @@ namespace NHLPredictorASP.Classes.Utility
 
             SetRestRequest("teams/?expand=team.roster");
 
-            var response = RestClient.Execute(RestRequest);
+            var response = RestClient.Execute(RestRequest).ToAsyncResponse<TeamArrayWrapper>();
 
-            var teams = JsonConvert.DeserializeObject<TeamArrayWrapper>(response.Content)?.Teams;
+            var teams = new RestSharp.Deserializers.JsonDeserializer().Deserialize<TeamArrayWrapper>(response)?.Teams;
+
 
             //Stopping the process if the response form the RestClient was null
             if (teams == null)
@@ -93,9 +94,9 @@ namespace NHLPredictorASP.Classes.Utility
 
             SetRestRequest("people/" + id + "/stats?stats=yearByYear");
 
-            var response = RestClient.Execute(RestRequest);
+            var response = RestClient.Execute(RestRequest).ToAsyncResponse<StatsList>();
 
-            var statsList = JsonConvert.DeserializeObject<StatsList>(response.Content);
+            var statsList = new RestSharp.Deserializers.JsonDeserializer().Deserialize<StatsList>(response);
 
             var lastYear = "";
             foreach (var split in statsList.Stats[0].Splits)
