@@ -42,12 +42,12 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a style="font-size: 125%;" class="navbar-brand" runat="server" href="./Selection">NHL Season Predictor</a>
+                <a style="font-size: 125%;" class="navbar-brand" runat="server" href="./Pages/Selection">NHL Season Predictor</a>
             </div>
             <div style="font-size: 150%;" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>
-                        <a runat="server" href="./Ranking">Ranking</a>
+                        <a runat="server" href="./Pages/Ranking">Ranking</a>
                     </li>
                 </ul>
             </div>

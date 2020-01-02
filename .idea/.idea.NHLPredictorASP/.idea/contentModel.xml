@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\tom91\.Rider2019.3\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\tom91\.Rider2019.3\system\resharper-host\local\Transient\ReSharperHost\v193\SolutionCaches\_NHLPredictorASP.1320034707.00" t="ExcludeRecursive" />
+    <e p="C:\Users\tom91\Documents\NHL-Season-Predictor-ASP.NET-Version" t="IncludeFlat">
+      <e p="NHLPredictorASP" t="IncludeRecursive">
+        <e p="App_Data" t="Include" />
+        <e p="App_Start" t="Include">
+          <e p="BundleConfig.cs" t="Include" />
+          <e p="RouteConfig.cs" t="Include" />
+        </e>
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Bundle.config" t="Include" />
+        <e p="Classes" t="Include">
+          <e p="Deserialization" t="Include">
+            <e p="PlayerComponents.cs" t="Include" />
+            <e p="TeamComponents.cs" t="Include" />
+          </e>
+          <e p="Entities" t="Include">
+            <e p="Player.cs" t="Include" />
+            <e p="Season.cs" t="Include" />
+          </e>
+          <e p="SelectionResources.cs" t="Include" />
+          <e p="Utility" t="Include">
+            <e p="ApiLoader.cs" t="Include" />
+            <e p="SeasonCalculator.cs" t="Include" />
+          </e>
+        </e>
+        <e p="Content" t="Include">
+          <e p="bootstrap-grid.css" t="Include" />
+          <e p="bootstrap-reboot.css" t="Include" />
+          <e p="bootstrap.css" t="Include" />
+          <e p="bootstrap.css.map" t="Include" />
+          <e p="bootstrap.min.css" t="Include" />
+          <e p="bootstrap.min.css.map" t="Include" />
+          <e p="rankingStyle.css" t="Include" />
+          <e p="Site.css" t="Include" />
+        </e>
+        <e p="favicon.ico" t="Include" />
+        <e p="Global.asax" t="Include" />
+        <e p="Global.asax.cs" t="Include" />
+        <e p="NHLPredictorASP.csproj" t="IncludeRecursive" />
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="packages.config" t="Include" />
+        <e p="Pages" t="Include">
+          <e p="Ranking.aspx" t="Include" />
+          <e p="Ranking.aspx.cs" t="Include" />
+          <e p="Ranking.aspx.designer.cs" t="Include" />
+          <e p="Selection.aspx" t="Include" />
+          <e p="Selection.aspx.cs" t="Include" />
+          <e p="Selection.aspx.designer.cs" t="Include" />
+        </e>
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+        </e>
+        <e p="Scripts" t="Include">
+          <e p="bootstrap.bundle.js" t="Include" />
+          <e p="bootstrap.js" t="Include" />
+          <e p="esm" t="Include">
+            <e p="popper-utils.js" t="Include" />
+            <e p="popper-utils.js.map" t="Include" />
+            <e p="popper-utils.min.js" t="Include" />
+            <e p="popper-utils.min.js.map" t="Include" />
+            <e p="popper.js" t="Include" />
+            <e p="popper.js.map" t="Include" />
+            <e p="popper.min.js" t="Include" />
+            <e p="popper.min.js.map" t="Include" />
+          </e>
+          <e p="index.d.ts" t="Include" />
+          <e p="jquery-3.4.1.intellisense.js" t="Include" />
+          <e p="jquery-3.4.1.js" t="Include" />
+          <e p="jquery-3.4.1.slim.js" t="Include" />
+          <e p="modernizr-2.8.3.js" t="Include" />
+          <e p="popper-utils.js" t="Include" />
+          <e p="popper-utils.js.map" t="Include" />
+          <e p="popper-utils.min.js" t="Include" />
+          <e p="popper-utils.min.js.map" t="Include" />
+          <e p="popper.js" t="Include" />
+          <e p="popper.js.map" t="Include" />
+          <e p="popper.min.js" t="Include" />
+          <e p="popper.min.js.map" t="Include" />
+          <e p="README.md" t="Include" />
+          <e p="umd" t="Include">
+            <e p="popper-utils.js" t="Include" />
+            <e p="popper-utils.js.map" t="Include" />
+            <e p="popper-utils.min.js" t="Include" />
+            <e p="popper-utils.min.js.map" t="Include" />
+            <e p="popper.js" t="Include" />
+            <e p="popper.js.map" t="Include" />
+            <e p="popper.min.js" t="Include" />
+            <e p="popper.min.js.map" t="Include" />
+          </e>
+          <e p="WebForms" t="Include">
+            <e p="Menu.js" t="Include" />
+            <e p="MenuStandards.js" t="Include" />
+            <e p="WebForms.js" t="Include" />
+            <e p="WebParts.js" t="Include" />
+            <e p="WebUIValidation.js" t="Include" />
+          </e>
+        </e>
+        <e p="Site.Master" t="Include" />
+        <e p="Site.Master.designer.cs" t="Include" />
+        <e p="Site.Mobile.Master" t="Include" />
+        <e p="Site.Mobile.Master.designer.cs" t="Include" />
+        <e p="Unit Tests" t="Include">
+          <e p="ApiLoaderTest.cs" t="Include" />
+          <e p="PlayerTest.cs" t="Include" />
+          <e p="SeasonTest.cs" t="Include" />
+        </e>
+        <e p="ViewSwitcher.ascx" t="Include" />
+        <e p="ViewSwitcher.ascx.cs" t="Include" />
+        <e p="ViewSwitcher.ascx.designer.cs" t="Include" />
+        <e p="Web.config" t="Include" />
+        <e p="Web.Debug.config" t="Include" />
+        <e p="Web.Release.config" t="Include" />
+      </e>
+      <e p="NHLPredictorASP.sln" t="IncludeFlat" />
+      <e p="packages" t="ExcludeRecursive">
+        <e p="NUnit3TestAdapter.3.15.1\build\net35\nunit.engine.api.dll" t="Include" />
+        <e p="NUnit3TestAdapter.3.15.1\build\net35\nunit.engine.dll" t="Include" />
+        <e p="NUnit3TestAdapter.3.15.1\build\net35\NUnit3.TestAdapter.dll" t="Include" />
+        <e p="NUnit3TestAdapter.3.15.1\build\net35\NUnit3.TestAdapter.pdb" t="Include" />
+      </e>
+    </e>
+  </component>
+</project>

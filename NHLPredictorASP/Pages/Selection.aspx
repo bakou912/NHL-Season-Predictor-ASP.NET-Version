@@ -1,4 +1,4 @@
-﻿<%@ Page Title="NHL Season Predictor" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Selection.aspx.cs" Inherits="NHLPredictorASP.Selection" %>
+﻿<%@ Page Title="NHL Season Predictor" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Selection.aspx.cs" Inherits="NHLPredictorASP.Pages.Selection" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 

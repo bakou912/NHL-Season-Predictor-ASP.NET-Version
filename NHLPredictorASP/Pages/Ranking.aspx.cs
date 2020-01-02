@@ -17,7 +17,7 @@ using NHLPredictorASP.Classes;
 using NHLPredictorASP.Classes.Entities;
 using NHLPredictorASP.Classes.Utility;
 
-namespace NHLPredictorASP
+namespace NHLPredictorASP.Pages
 {
     public partial class Ranking : Page
     {

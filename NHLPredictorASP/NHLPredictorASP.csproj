@@ -264,8 +264,9 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\rankingStyle.css" />
-    <Content Include="Ranking.aspx" />
     <Content Include="Content\Site.css" />
+    <Content Include="Pages\Ranking.aspx" />
+    <Content Include="Pages\Selection.aspx" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Content\bootstrap.min.css.map" />
@@ -289,7 +290,6 @@
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
-    <Content Include="Selection.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
@@ -309,6 +309,20 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Classes\Utility\ApiLoader.cs" />
     <Compile Include="Classes\Deserialization\PlayerComponents.cs" />
+    <Compile Include="Pages\Ranking.aspx.cs">
+      <DependentUpon>Ranking.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Ranking.aspx.designer.cs">
+      <DependentUpon>Ranking.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Selection.aspx.cs">
+      <DependentUpon>Selection.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Selection.aspx.designer.cs">
+      <DependentUpon>Selection.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Unit Tests\PlayerTest.cs" />
     <Compile Include="Unit Tests\SeasonTest.cs" />
     <Compile Include="Unit Tests\ApiLoaderTest.cs" />
@@ -317,20 +331,6 @@
     <Compile Include="Classes\Entities\Player.cs" />
     <Compile Include="Classes\Entities\Season.cs" />
     <Compile Include="Classes\SelectionResources.cs" />
-    <Compile Include="Ranking.aspx.cs">
-      <DependentUpon>Ranking.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Ranking.aspx.designer.cs">
-      <DependentUpon>Ranking.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Selection.aspx.cs">
-      <DependentUpon>Selection.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Selection.aspx.designer.cs">
-      <DependentUpon>Selection.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
